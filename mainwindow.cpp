@@ -3,6 +3,7 @@
 #include "settingsdialog.h"
 #include "console.h"
 #include "editor.h"
+#include <QDebug>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -88,7 +89,7 @@ bool MainWindow::okToContinue()
 void MainWindow::setupConsole()
 {
     console = new Console(this);
-    console->setEnabled(false);
+    console->setEnabled(true);
 }
 
 
@@ -171,7 +172,17 @@ void MainWindow::setupActions()
    QWidget::connect(ui->actionSave, SIGNAL(triggered(bool)),this, SLOT(save()));
    QWidget::connect(ui->actionConnect, SIGNAL(triggered(bool)),this, SLOT(checkState()));
    QWidget::connect(ui->actionCheckSyntax, SIGNAL(triggered(bool)),this, SLOT()); //TODO
-   QWidget::connect(ui->actionSend, SIGNAL(triggered(bool)),this, SLOT()); //TODO
+   QWidget::connect(ui->actionSend, SIGNAL(triggered(bool)),this, SLOT(trySend())); //TODO
+}
+void MainWindow::trySend()
+{
+    qDebug()<<"hello from slot";
+    Numberer numberer;
+    if(okToContinue())
+    {
+        //errorChecker(currentFileName);
+        numberer.number(currentFileName);
+    }
 }
 void MainWindow::checkState()
 {

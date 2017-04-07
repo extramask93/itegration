@@ -11,6 +11,7 @@
 #include "console.h"
 #include "highlighter.h"
 #include "editor.h"
+#include "numberer.h"
 namespace Ui {
 class MainWindow;
 }
@@ -29,6 +30,7 @@ public slots:
     bool save();
     void open();
     void updateLineNumbers();
+    void trySend();
 private slots:
        void checkState();
        void on_actionSettings_triggered();

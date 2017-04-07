@@ -28,13 +28,17 @@ SOURCES += main.cpp\
     settingsdialog.cpp \
     console.cpp \
     highlighter.cpp \
-    editor.cpp
+    editor.cpp \
+    numberer.cpp \
+    interpreter.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
     console.h \
     highlighter.h \
-    editor.h
+    editor.h \
+    numberer.h \
+    interpreter.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \

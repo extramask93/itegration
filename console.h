@@ -2,6 +2,7 @@
 #define CONSOLE_H
 #include <QPlainTextEdit>
 #include <QWidget>
+#include <QColor>
 
 namespace Ui {
 class Console;
@@ -13,15 +14,28 @@ class Console : public QPlainTextEdit
 
 public:
     explicit Console(QWidget *parent = nullptr);
-
+    void setPrefix(const QString &prefix);
+    QString getPrefix()const {return prefix;}
+    void processCommand();
     void putData(const QByteArray &data);
-
+    bool inCommandLine() const;
     void setLocalEchoEnabled(bool set);
+    void setPrefixColor(const QColor &color);
 
 private:
     bool localEchoEnabled;
+    int historyPos;
+    QColor prefixColor;
+    QStringList history;
+    QString prefix;
+    bool commandLineReady;
+
 signals:
     void getData(const QByteArray &data);
+    void commandIssued(QString command);
+public slots:
+    void print(QString str);
+    void prepareCommandLine();
 protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;

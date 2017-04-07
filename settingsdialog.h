@@ -1,6 +1,5 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
-
 #include <QDialog>
 #include <QtSerialPort/QSerialPort>
 
@@ -34,6 +33,8 @@ public slots:
         void apply();
 
 private:
+    void saveSettings();
+    void loadSettings();
     Ui::SettingsDialog *ui;
     void initFields();
     void initPortsInfo();

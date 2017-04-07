@@ -2,6 +2,7 @@
 #include "ui_settingsdialog.h"
 #include <QtSerialPort/QSerialPortInfo>
 #include <QDebug>
+#include <QSettings>
 QT_USE_NAMESPACE
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -12,6 +13,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     initPortsInfo();
     QWidget::connect(ui->okButton,SIGNAL (clicked()),this,SLOT (apply()));
     QWidget::connect(ui->cancelButton,SIGNAL (clicked()),this,SLOT (hide()));
+    loadSettings();
 }
 
 SettingsDialog::~SettingsDialog()
@@ -23,9 +25,34 @@ SettingsDialog::Settings SettingsDialog::settings() const
     return currentSettings;
 }
 
+void SettingsDialog::saveSettings()
+{
+    QSettings settings_("Jozek","Robots");
+    settings_.beginGroup("Settings");
+    settings_.setValue("Parity",ui->parityBox->currentIndex());
+    settings_.setValue("StopBits",ui->stopBox->currentIndex());
+    settings_.setValue("Baud",ui->baudBox->currentIndex());
+    settings_.setValue("DataBits",ui->dataBox->currentIndex());
+    settings_.setValue("Flow",ui->flowBox->currentIndex());
+    settings_.endGroup();
+    qDebug() << settings_.fileName();
+}
+void SettingsDialog::loadSettings()
+{
+    QSettings settings_("Jozek","Robots");
+    settings_.beginGroup("Settings");
+    ui->parityBox->setCurrentIndex(settings_.value("Parity").toInt());
+    ui->stopBox->setCurrentIndex(settings_.value("StopBits").toInt());
+    ui->baudBox->setCurrentIndex(settings_.value("Baud").toInt());
+    ui->dataBox->setCurrentIndex(settings_.value("DataBits").toInt());
+    ui->flowBox->setCurrentIndex(settings_.value("Flow").toInt());
+
+}
+
 void SettingsDialog::apply()
 {
     updateSettings();
+    saveSettings();
     hide();
 }
 void SettingsDialog::updateSettings()
