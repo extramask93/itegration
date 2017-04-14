@@ -30,7 +30,9 @@ SOURCES += main.cpp\
     highlighter.cpp \
     editor.cpp \
     numberer.cpp \
-    interpreter.cpp
+    interpreter.cpp \
+    syntaxcheck.cpp \
+    result.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -38,7 +40,9 @@ HEADERS  += mainwindow.h \
     highlighter.h \
     editor.h \
     numberer.h \
-    interpreter.h
+    interpreter.h \
+    syntaxcheck.h \
+    result.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \

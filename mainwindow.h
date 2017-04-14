@@ -7,11 +7,13 @@
 #include <QDockWidget>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <tuple>
 #include "settingsdialog.h"
 #include "console.h"
 #include "highlighter.h"
 #include "editor.h"
 #include "numberer.h"
+#include "syntaxcheck.h"
 namespace Ui {
 class MainWindow;
 }
@@ -33,6 +35,7 @@ public slots:
     void trySend();
 private slots:
        void checkState();
+       void compile();
        void on_actionSettings_triggered();
 
 private:

@@ -46,6 +46,8 @@
    <qresource>
       <file alias="robot.png">rc/robot.png</file>
 	  <file>rc/settings.png</file>
+	  <file>rc/database.txt</file>
+	  <file>rc/foo2.txt</file>
 	  <file>rc/newFile.png</file>
 	  <file>rc/connected.png</file>
 	  <file>rc/disconnected.png</file>

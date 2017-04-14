@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QTextEdit>
 #include "highlighter.h"
+#include "result.h"
 #include<QPlainTextEdit>
 #include <QMessageBox>
 
@@ -23,6 +24,7 @@ public:
     bool writeFile(const QString &fileName);
     bool readFile(const QString &fileName);
     void keyPressEvent(QKeyEvent* e);
+    void paintErrors(QList<Result>);
 protected:
     void resizeEvent(QResizeEvent *event) override;
 private slots:

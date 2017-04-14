@@ -1,0 +1,10 @@
+MV 22,33,4
+MO 222
+'asdasdda
+MO 222'asdds
+MO 333 MO 444
+MO 333MO444
+DS 22,0,3,3
+DS 22,3,5
+DS 33,2,66 'asdadas
+DS 33,2,66'asdadas

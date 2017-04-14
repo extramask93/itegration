@@ -171,9 +171,26 @@ void MainWindow::setupActions()
    QWidget::connect(ui->actionOpen, SIGNAL(triggered(bool)),this, SLOT(open()));
    QWidget::connect(ui->actionSave, SIGNAL(triggered(bool)),this, SLOT(save()));
    QWidget::connect(ui->actionConnect, SIGNAL(triggered(bool)),this, SLOT(checkState()));
-   QWidget::connect(ui->actionCheckSyntax, SIGNAL(triggered(bool)),this, SLOT()); //TODO
+   QWidget::connect(ui->actionCheckSyntax, SIGNAL(triggered(bool)),this, SLOT(compile())); //TODO
    QWidget::connect(ui->actionSend, SIGNAL(triggered(bool)),this, SLOT(trySend())); //TODO
 }
+void MainWindow::compile()
+{
+    if(okToContinue())
+    {
+        SyntaxCheck check(this);
+        check.checkFile(currentFileName);
+        auto resultsT=check.errorlist;
+        foreach (auto error, resultsT) {
+            if(error.errorCode)
+                console->print("'Error: "+error.errorString+" in line: "+QString::number(error.lineNr));
+              //ui->editor->highlightError(std::get<1>(tpl));
+        }
+        ui->editor->paintErrors(resultsT);
+        console->prepareCommandLine();
+    }
+}
+
 void MainWindow::trySend()
 {
     qDebug()<<"hello from slot";

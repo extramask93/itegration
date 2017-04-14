@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <QTextEdit>
 #include <QtWidgets>
+#include <QDebug>
 
 Editor::Editor(QWidget *parent):QPlainTextEdit(parent)
 {
@@ -47,6 +48,20 @@ bool Editor::writeFile(const QString &fileName)
     else
         return false;
 }
+void Editor::clearErrors()
+void Editor::paintErrors(QList<Result> errors)
+{
+    textColor()
+    foreach(auto error, errors){
+        QTextBlock block_ = document()->findBlockByNumber(error.lineNr-1);
+        QTextCursor cursor_(block_);
+        QTextBlockFormat format = cursor_.blockFormat();
+        format.setBackground(Qt::red);
+        cursor_.setBlockFormat(format);
+    }
+
+}
+
 bool Editor::readFile(const QString &fileName)
 {
     QFile file(fileName);

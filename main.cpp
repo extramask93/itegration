@@ -2,8 +2,12 @@
 #include <QApplication>
 #include <QSplashScreen>
 #include <QThread>
+#include "syntaxcheck.h"
 int main(int argc, char *argv[])
 {
+//    SyntaxCheck check;
+//    check.checkFile(":/rc/foo2.txt");
+//    return 0;
     QApplication a(argc, argv);
     QPixmap splash(":/robot.png");
      QSplashScreen splashScreen(splash);

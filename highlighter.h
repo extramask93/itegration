@@ -13,6 +13,7 @@ class Highlighter : public QSyntaxHighlighter
     Q_OBJECT
 public:
     Highlighter(QTextDocument *parent =0);
+    highlightError(int lineNr);
 
 protected:
     void highlightBlock(const QString &text) override;
@@ -26,6 +27,7 @@ private:
     QVector<HighlightingRule> highlightingRules;
 
     QTextCharFormat keywordFormat;
+    QTextCharFormat errorFormat;
     QTextCharFormat singleLineCommentFormat;
     QTextCharFormat quotationFormat;
 

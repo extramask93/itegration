@@ -5,6 +5,7 @@ Highlighter::Highlighter(QTextDocument *parent)
 {
     HighlightingRule rule;
     keywordFormat.setForeground(Qt::green);
+    errorFormat.setBackground(Qt::red);
     keywordFormat.setFontWeight(QFont::Bold);
     QStringList keywordPatterns;
     keywordPatterns << "\\bCF\\b" << "\\bDJ\\b" << "\\bDP\\b"
