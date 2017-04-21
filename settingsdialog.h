@@ -16,6 +16,7 @@ public:
     ~SettingsDialog();
     struct Settings {
         QString name;
+        //QSerialPort::ser
         qint32 baudRate;
         QString stringBaudRate;
         QSerialPort::DataBits dataBits;

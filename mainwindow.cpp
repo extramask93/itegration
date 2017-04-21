@@ -3,13 +3,18 @@
 #include "settingsdialog.h"
 #include "console.h"
 #include "editor.h"
+#include "interpreter.h"
 #include <QDebug>
+#include <QSerialPortInfo>
 
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    rsSettings = new SettingsDialog(this); //settings dialog
+    serial = new SerialPort{this};
+    interpreter = new Interpreter(this);
     setWindowIcon(QIcon(":/robot.png"));
     ui->setupUi(this);
     setUIStyle();
@@ -21,20 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setupActions();
     setupHelpMenu();
     setupDocking();
-    rsSettings = new SettingsDialog(this); //settings dialog
-    serial = new QSerialPort(this);
-    //QWidget::connect(ui->editor, SIGNAL (textChanged()),this,SLOT(updateLineNumbers()));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete rsSettings;
-}
-
-void MainWindow::updateLineNumbers()
-{
-    qDebug("aaaa");
 }
 
 void MainWindow::setupDocking()
@@ -90,6 +87,8 @@ void MainWindow::setupConsole()
 {
     console = new Console(this);
     console->setEnabled(true);
+    QWidget::connect(console,SIGNAL(commandIssued(QString)),interpreter,SLOT(processCommand(QString)));
+    QWidget::connect(interpreter,SIGNAL(robotCommandIssued(QByteArray)),serial,SLOT(writeS(QByteArray)));
 }
 
 
@@ -186,7 +185,7 @@ void MainWindow::compile()
                 console->print("'Error: "+error.errorString+" in line: "+QString::number(error.lineNr));
               //ui->editor->highlightError(std::get<1>(tpl));
         }
-        ui->editor->paintErrors(resultsT);
+        //ui->editor->paintErrors(resultsT);
         console->prepareCommandLine();
     }
 }
@@ -211,37 +210,40 @@ void MainWindow::checkState()
 
 void MainWindow::openSerialPort()
 {
+
     auto settings = rsSettings->settings();
     serial->setBaudRate(settings.baudRate);
+    serial->setPort(QSerialPortInfo(settings.name));
     serial->setDataBits(settings.dataBits);
     serial->setFlowControl(settings.flowControl);
     serial->setParity(settings.parity);
     serial->setStopBits(settings.stopBits);
     if(serial->open(QIODevice::ReadWrite))
     {
+        qDebug()<<"Connection established";
         console->setEnabled(true);
         console->setLocalEchoEnabled(settings.localEchoEnabled);
-        //ui->connectButton->setIcon(QIcon(":/disconnected.png"));
+        ui->actionConnect->setIcon(QIcon(":/disconnected.png"));
         connected = true;
         //ui->settingsButton->setEnabled(false);
         //TODO show connected in console
-
     }
     else{
-        QMessageBox::critical(this,tr("Connection Error"),serial->errorString());
-        //TODO: show erron on console
+        QMessageBox::critical(this,tr("Connection Error"),serial->errorString()+serial->error());
     }
 }
 
 void MainWindow::closeSerialPort()
 {
     if(serial->isOpen())
+    {
         serial->close();
+        qDebug()<<"disconnected";
+    }
         //TODO show disconnected on the console
     console->setEnabled(false);
-    //ui->connectButton->setIcon(QIcon(":/connected.png"));
     connected=false;
-    //ui->settingsButton->setEnabled(true);
+    ui->actionConnect->setIcon(QIcon(":/connected.png"));
 }
 
 void MainWindow::setUIStyle()
@@ -264,4 +266,8 @@ void MainWindow::setUIStyle()
 void MainWindow::on_actionSettings_triggered()
 {
     rsSettings->show();
+}
+void MainWindow::about()
+{
+
 }

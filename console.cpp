@@ -192,7 +192,7 @@ void Console::processCommand()
     setTextCursor(cur);
     commandLineReady=false;
     emit commandIssued(inputString);
-    //prepareCommandLine();
+    prepareCommandLine();
 }
 void Console::print(QString str)
 {

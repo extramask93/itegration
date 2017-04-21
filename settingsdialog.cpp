@@ -34,6 +34,7 @@ void SettingsDialog::saveSettings()
     settings_.setValue("Baud",ui->baudBox->currentIndex());
     settings_.setValue("DataBits",ui->dataBox->currentIndex());
     settings_.setValue("Flow",ui->flowBox->currentIndex());
+    settings_.setValue("Port",ui->portBox->currentIndex());
     settings_.endGroup();
     qDebug() << settings_.fileName();
 }
@@ -46,6 +47,7 @@ void SettingsDialog::loadSettings()
     ui->baudBox->setCurrentIndex(settings_.value("Baud").toInt());
     ui->dataBox->setCurrentIndex(settings_.value("DataBits").toInt());
     ui->flowBox->setCurrentIndex(settings_.value("Flow").toInt());
+    ui->portBox->setCurrentIndex(settings_.value("Port").toInt());
 
 }
 
@@ -79,6 +81,7 @@ void SettingsDialog::updateSettings()
      currentSettings.flowControl = static_cast<QSerialPort::FlowControl>(
                  ui->flowBox->itemData(ui->flowBox->currentIndex()).toInt());
      currentSettings.stringFlowControl = ui->flowBox->currentText();
+     currentSettings.name=ui->portBox->currentText();
 }
 
 void SettingsDialog::initFields()

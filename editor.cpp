@@ -48,19 +48,19 @@ bool Editor::writeFile(const QString &fileName)
     else
         return false;
 }
-void Editor::clearErrors()
-void Editor::paintErrors(QList<Result> errors)
-{
-    textColor()
-    foreach(auto error, errors){
-        QTextBlock block_ = document()->findBlockByNumber(error.lineNr-1);
-        QTextCursor cursor_(block_);
-        QTextBlockFormat format = cursor_.blockFormat();
-        format.setBackground(Qt::red);
-        cursor_.setBlockFormat(format);
-    }
+//void Editor::clearErrors()
+//void Editor::paintErrors(QList<Result> errors)
+//{
+//    textColor()
+//    foreach(auto error, errors){
+//        QTextBlock block_ = document()->findBlockByNumber(error.lineNr-1);
+//        QTextCursor cursor_(block_);
+//        QTextBlockFormat format = cursor_.blockFormat();
+//        format.setBackground(Qt::red);
+//        cursor_.setBlockFormat(format);
+//    }
 
-}
+//}
 
 bool Editor::readFile(const QString &fileName)
 {
@@ -138,4 +138,8 @@ void Editor::lineNumberAreaPaintEvent(QPaintEvent *event)
         bottom = top + (int) blockBoundingRect(block).height();
         ++blockNumber;
     }
+}
+void Editor::find()
+{
+
 }

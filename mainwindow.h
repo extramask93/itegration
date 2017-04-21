@@ -14,6 +14,8 @@
 #include "editor.h"
 #include "numberer.h"
 #include "syntaxcheck.h"
+#include "interpreter.h"
+#include "serialport.h"
 namespace Ui {
 class MainWindow;
 }
@@ -31,19 +33,20 @@ public slots:
     bool saveAs();
     bool save();
     void open();
-    void updateLineNumbers();
     void trySend();
 private slots:
        void checkState();
        void compile();
        void on_actionSettings_triggered();
+       void about();
 
 private:
     Ui::MainWindow *ui;
     SettingsDialog *rsSettings;
     Console *console;
-    QSerialPort *serial;
+    SerialPort *serial;
     QString currentFileName;
+    Interpreter *interpreter;
     bool connected = false;
     void openSerialPort();
     void closeSerialPort();

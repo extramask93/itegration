@@ -14,6 +14,7 @@ class Editor : public QPlainTextEdit
     Q_OBJECT
 private slots:
     void setTextEdited();
+    void find();
 private:
         Highlighter *highlighter;
         QWidget *lineNumberArea;

@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     numberer.cpp \
     interpreter.cpp \
     syntaxcheck.cpp \
-    result.cpp
+    result.cpp \
+    serialport.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -42,7 +43,8 @@ HEADERS  += mainwindow.h \
     numberer.h \
     interpreter.h \
     syntaxcheck.h \
-    result.h
+    result.h \
+    serialport.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \
