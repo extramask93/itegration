@@ -1,20 +1,49 @@
 #include "interpreter.h"
 #include <QDebug>
 
-Interpreter::Interpreter(QObject *parent) : QObject(parent)
+Interpreter::Interpreter(IPrinter *console_,QObject *parent) : QObject(parent), checker()
 {
-
+    console=console_;
 }
 void Interpreter::processCommand(QString command)
 {
-    auto commandByte = command.toLocal8Bit();
-    if(commandByte[0]=='!')
+    if(command[0]=='!')
     {
-        emit controlCommandIssued(commandByte);
+        emit controlCommandIssued(command);
     }
     else
     {
-        emit robotCommandIssued(commandByte.append('\r'));
+        Result result = checker.checkLine(command,1);
+        if(!result.errorCode)
+        {
+            auto commandByte = command.toLocal8Bit();
+            emit robotCommandIssued(commandByte.append('\r'));
+        }
+        else
+        {
+            console->printError(result.errorString);
+        }
     }
 }
+int Interpreter::processScript(QString fileName)
+{
+    if(checker.checkFile(fileName))
+    {
+        console->printError("Cannot open the file: "+fileName);
+        return 1;
+    }
+    else
+    {
+        foreach(auto result,checker.errorlist)
+        {
+            console->printError("Line "+QString::number(result.lineNr)+": "+result.errorString);
+
+        }
+        if(!checker.errorlist.empty())
+            return 1;
+        else
+            return 0;
+    }
+}
+
 

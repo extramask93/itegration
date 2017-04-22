@@ -40,12 +40,14 @@ Result SyntaxCheck::checkLine(QString line,bool ommitUnknown)
     else
        return Result(1,0,"Parameters not matching function footprint");
 }
-void SyntaxCheck::checkFile(QString filename)
+int SyntaxCheck::checkFile(QString filename)
 {
+    errorlist.clear();
     QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning("Couldn't open file.");
-        return;}
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        return 1;
+    }
     QTextStream in(&file);
     int counter =0;
     while (!in.atEnd())
@@ -63,6 +65,7 @@ void SyntaxCheck::checkFile(QString filename)
        }
     }
     file.close();
+    return 0;
 }
 
 bool SyntaxCheck::loadDatabase()

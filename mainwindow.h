@@ -36,7 +36,7 @@ public slots:
     void trySend();
 private slots:
        void checkState();
-       void compile();
+       int compile();
        void on_actionSettings_triggered();
        void about();
 

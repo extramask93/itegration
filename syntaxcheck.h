@@ -14,7 +14,7 @@ class SyntaxCheck : public QObject
 public:
     explicit SyntaxCheck(QObject *parent = 0);
     Result checkLine(QString line,bool ommitUnknown);
-    void checkFile(QString filename);
+    int checkFile(QString filename);
     bool loadJson();
     bool loadDatabase();
     QList<Result> errorlist;

@@ -3,12 +3,14 @@
 #include <QPlainTextEdit>
 #include <QWidget>
 #include <QColor>
+#include "interpreter.h"
+#include "iprinter.h"
 
 namespace Ui {
 class Console;
 }
 
-class Console : public QPlainTextEdit
+class Console : public QPlainTextEdit, public IPrinter
 {
     Q_OBJECT
 
@@ -21,6 +23,8 @@ public:
     bool inCommandLine() const;
     void setLocalEchoEnabled(bool set);
     void setPrefixColor(const QColor &color);
+    virtual void  printMessage(QString message) override;
+    virtual void printError(QString) override ;
 
 private:
     bool localEchoEnabled;

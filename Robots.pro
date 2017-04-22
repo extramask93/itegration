@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     interpreter.cpp \
     syntaxcheck.cpp \
     result.cpp \
-    serialport.cpp
+    serialport.cpp \
+    iprinter.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -44,7 +45,8 @@ HEADERS  += mainwindow.h \
     interpreter.h \
     syntaxcheck.h \
     result.h \
-    serialport.h
+    serialport.h \
+    iprinter.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \

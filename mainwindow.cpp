@@ -12,9 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    console = new Console(this);
     rsSettings = new SettingsDialog(this); //settings dialog
     serial = new SerialPort{this};
-    interpreter = new Interpreter(this);
+    interpreter = new Interpreter(console,this);
     setWindowIcon(QIcon(":/robot.png"));
     ui->setupUi(this);
     setUIStyle();
@@ -26,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setupActions();
     setupHelpMenu();
     setupDocking();
+    ui->actionSend->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -85,7 +87,6 @@ bool MainWindow::okToContinue()
 
 void MainWindow::setupConsole()
 {
-    console = new Console(this);
     console->setEnabled(true);
     QWidget::connect(console,SIGNAL(commandIssued(QString)),interpreter,SLOT(processCommand(QString)));
     QWidget::connect(interpreter,SIGNAL(robotCommandIssued(QByteArray)),serial,SLOT(writeS(QByteArray)));
@@ -173,32 +174,43 @@ void MainWindow::setupActions()
    QWidget::connect(ui->actionCheckSyntax, SIGNAL(triggered(bool)),this, SLOT(compile())); //TODO
    QWidget::connect(ui->actionSend, SIGNAL(triggered(bool)),this, SLOT(trySend())); //TODO
 }
-void MainWindow::compile()
+int MainWindow::compile()
 {
     if(okToContinue())
     {
-        SyntaxCheck check(this);
-        check.checkFile(currentFileName);
-        auto resultsT=check.errorlist;
-        foreach (auto error, resultsT) {
-            if(error.errorCode)
-                console->print("'Error: "+error.errorString+" in line: "+QString::number(error.lineNr));
-              //ui->editor->highlightError(std::get<1>(tpl));
+        if(interpreter->processScript(currentFileName))
+        {
+            ui->actionSend->setEnabled(false);
+            return 1;
         }
-        //ui->editor->paintErrors(resultsT);
+        else
+        {
+            ui->actionSend->setEnabled(true);
+            return 0;
+        }
         console->prepareCommandLine();
     }
+    else
+        return 1;
 }
 
 void MainWindow::trySend()
 {
-    qDebug()<<"hello from slot";
-    Numberer numberer;
-    if(okToContinue())
+    if(compile())
+        return;
+    if(!serial->isOpen())
     {
-        //errorChecker(currentFileName);
-        numberer.number(currentFileName);
+        console->printError("Serial connection not established");
+        return;
     }
+    Numberer numberer;
+    QStringList commands=numberer.number(currentFileName);
+    foreach (auto cmd, commands) {
+        serial->write(cmd.toStdString().c_str());
+        qDebug()<<cmd;
+    }
+    console->printMessage("File sent");
+
 }
 void MainWindow::checkState()
 {
@@ -220,7 +232,7 @@ void MainWindow::openSerialPort()
     serial->setStopBits(settings.stopBits);
     if(serial->open(QIODevice::ReadWrite))
     {
-        qDebug()<<"Connection established";
+        console->printMessage("Connection established");
         console->setEnabled(true);
         console->setLocalEchoEnabled(settings.localEchoEnabled);
         ui->actionConnect->setIcon(QIcon(":/disconnected.png"));
@@ -238,7 +250,7 @@ void MainWindow::closeSerialPort()
     if(serial->isOpen())
     {
         serial->close();
-        qDebug()<<"disconnected";
+        console->printMessage("Disconnected");
     }
         //TODO show disconnected on the console
     console->setEnabled(false);

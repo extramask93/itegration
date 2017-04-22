@@ -27,6 +27,15 @@ Console::Console(QWidget *parent)
     commandLineReady=false;
     prepareCommandLine();
 }
+void Console::printError(QString error)
+{
+    print(error);
+}
+void Console::printMessage(QString message)
+{
+    print(message);
+}
+
 void Console::setPrefix(const QString &prefix)
 {
     this->prefix=prefix;
