@@ -87,7 +87,7 @@
   <action name="actionConnect">
    <property name="icon">
     <iconset resource="style.qrc">
-     <normaloff>:/rc/connected.png</normaloff>:/rc/connected.png</iconset>
+     <normaloff>:/rc/disconnected.png</normaloff>:/rc/disconnected.png</iconset>
    </property>
    <property name="text">
     <string>Connect</string>

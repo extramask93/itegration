@@ -18,7 +18,7 @@ QStringList Numberer::number(QString fileName)
     while(!in.atEnd())
     {
         QString line=in.readLine();
-        line=QString::number(i)+line+'\r';
+        line=QString::number(i)+' '+line+'\r';
         i++;
         result.append(line);
     }

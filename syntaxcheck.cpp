@@ -12,7 +12,6 @@ SyntaxCheck::SyntaxCheck(QObject *parent) : QObject(parent){
 Result SyntaxCheck::checkLine(QString line,bool ommitUnknown)
 {
    line = line.trimmed();
-
    QString cmdPattern = "^\\w{2,5}\\s+[0-9A-Za-z,]*\\s*($|\')";
    QRegExp cmdrx1(cmdPattern,Qt::CaseInsensitive);
    if(cmdrx1.indexIn(line)==-1)

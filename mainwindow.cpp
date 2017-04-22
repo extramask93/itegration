@@ -180,12 +180,10 @@ int MainWindow::compile()
     {
         if(interpreter->processScript(currentFileName))
         {
-            ui->actionSend->setEnabled(false);
             return 1;
         }
         else
         {
-            ui->actionSend->setEnabled(true);
             return 0;
         }
         console->prepareCommandLine();
@@ -233,12 +231,12 @@ void MainWindow::openSerialPort()
     if(serial->open(QIODevice::ReadWrite))
     {
         console->printMessage("Connection established");
-        console->setEnabled(true);
+        //console->setEnabled(true);
         console->setLocalEchoEnabled(settings.localEchoEnabled);
-        ui->actionConnect->setIcon(QIcon(":/disconnected.png"));
+        ui->actionConnect->setIcon(QIcon(":/rc/connected.png"));
         connected = true;
-        //ui->settingsButton->setEnabled(false);
-        //TODO show connected in console
+        ui->actionSettings->setEnabled(false);
+        ui->actionSend->setEnabled(true);
     }
     else{
         QMessageBox::critical(this,tr("Connection Error"),serial->errorString()+serial->error());
@@ -252,10 +250,11 @@ void MainWindow::closeSerialPort()
         serial->close();
         console->printMessage("Disconnected");
     }
-        //TODO show disconnected on the console
-    console->setEnabled(false);
+    //console->setEnabled(false);
+    ui->actionSettings->setEnabled(true);
+    ui->actionSend->setEnabled(false);
     connected=false;
-    ui->actionConnect->setIcon(QIcon(":/connected.png"));
+    ui->actionConnect->setIcon(QIcon(":/rc/disconnected.png"));
 }
 
 void MainWindow::setUIStyle()
