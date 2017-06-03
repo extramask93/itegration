@@ -1,6 +1,7 @@
 #include "interpreter.h"
+#include "qasyncqueue.h"
 #include <QDebug>
-
+extern QAsyncQueue<QByteArray> queue;
 Interpreter::Interpreter(IPrinter *console_,QObject *parent) : QObject(parent), checker()
 {
     console=console_;
@@ -18,6 +19,7 @@ void Interpreter::processCommand(QString command)
         {
             auto commandByte = command.toLocal8Bit();
             emit robotCommandIssued(commandByte.append('\r'));
+            queue.push(commandByte.append('\r'));
         }
         else
         {

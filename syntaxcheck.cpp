@@ -32,7 +32,9 @@ Result SyntaxCheck::checkLine(QString line,bool ommitUnknown)
             return Result(1,0,"Command not found in database");
     }
 
-    QString fullPattern='^'+key+"\\s+"+database[key]+"\\s*($|\')";
+    QString fullPattern='^'+key+R"(\s+)"+database[key]+R"*(\s*($|'))*";
+    qDebug()<<"fullpattern: ";
+    qDebug()<<fullPattern;
     QRegExp fullrx(fullPattern,Qt::CaseInsensitive);
     if(fullrx.indexIn(line)!=-1)
        return Result(0,0,"OK");

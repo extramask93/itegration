@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     syntaxcheck.cpp \
     result.cpp \
     serialport.cpp \
-    iprinter.cpp
+    iprinter.cpp \
+    qasyncqueue.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     syntaxcheck.h \
     result.h \
     serialport.h \
-    iprinter.h
+    iprinter.h \
+    qasyncqueue.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \

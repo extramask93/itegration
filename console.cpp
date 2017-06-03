@@ -206,12 +206,15 @@ void Console::processCommand()
 void Console::print(QString str)
 {
   QTextCursor cur(document()->lastBlock());
+  cur.select(QTextCursor::LineUnderCursor);
+  cur.removeSelectedText();
   cur.setCharFormat(QTextCharFormat());
   cur.insertText(str);
-  cur.movePosition(QTextCursor::EndOfBlock);
   cur.insertBlock();
+  cur.movePosition(QTextCursor::EndOfBlock);
   setTextCursor(cur);
-  commandLineReady = false;
+  commandLineReady=false;
+  prepareCommandLine();
 }
 void Console::mousePressEvent(QMouseEvent *e)
 {

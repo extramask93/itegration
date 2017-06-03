@@ -17,7 +17,7 @@ Highlighter::Highlighter(QTextDocument *parent)
                     << "\\bMTS\\b" << "\\bNT\\b" << "\\bOG\\b"
                     << "\\bOVR\\b" << "\\bPA\\b" << "\\bPO\\b"
                     << "\\bPC\\b" << "\\bPD\\b" << "\\bPT\\b"
-                    << "\\SD\\b" << "\\bPW\\b"<<"\\bSP\\b"
+                    << "\\bSD\\b" << "\\bPW\\b"<<"\\bSP\\b"
                     << "\\bTI\\b" << "\\bTL\\b" << "\\bTLM\\b"
                     << "\\bCL\\b" << "\\bCP\\b" << "\\bDA\\b"
                     << "\\bDL\\b" << "\\bEA\\b" << "\\bED\\b"

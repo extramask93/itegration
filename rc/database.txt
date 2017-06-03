@@ -1,1 +1,1 @@
-{ "key1": "\\s+\\d+", "key2": "value2","DS":"\\d+,\\d+,\\d+"}
+{ "KOMENDA": "REGEX Z PARAMETRAMI", "DS":"\\d+,\\d+,\\d+"}

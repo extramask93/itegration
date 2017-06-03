@@ -29,6 +29,7 @@ void SettingsDialog::saveSettings()
 {
     QSettings settings_("Jozek","Robots");
     settings_.beginGroup("Settings");
+    settings_.setValue("Port",ui->portBox->currentIndex());
     settings_.setValue("Parity",ui->parityBox->currentIndex());
     settings_.setValue("StopBits",ui->stopBox->currentIndex());
     settings_.setValue("Baud",ui->baudBox->currentIndex());
@@ -42,12 +43,14 @@ void SettingsDialog::loadSettings()
 {
     QSettings settings_("Jozek","Robots");
     settings_.beginGroup("Settings");
+    ui->portBox->setCurrentIndex(settings_.value("Port").toInt());
     ui->parityBox->setCurrentIndex(settings_.value("Parity").toInt());
     ui->stopBox->setCurrentIndex(settings_.value("StopBits").toInt());
     ui->baudBox->setCurrentIndex(settings_.value("Baud").toInt());
     ui->dataBox->setCurrentIndex(settings_.value("DataBits").toInt());
     ui->flowBox->setCurrentIndex(settings_.value("Flow").toInt());
     ui->portBox->setCurrentIndex(settings_.value("Port").toInt());
+    updateSettings();
 
 }
 

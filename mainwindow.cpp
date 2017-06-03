@@ -4,9 +4,12 @@
 #include "console.h"
 #include "editor.h"
 #include "interpreter.h"
+#include "qasyncqueue.h"
 #include <QDebug>
 #include <QSerialPortInfo>
-
+//global queue holds data to send
+constexpr const unsigned int sQ = 20;
+QAsyncQueue<QByteArray> queue{sQ};
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -203,10 +206,17 @@ void MainWindow::trySend()
     }
     Numberer numberer;
     QStringList commands=numberer.number(currentFileName);
-    foreach (auto cmd, commands) {
-        serial->write(cmd.toStdString().c_str());
-        qDebug()<<cmd;
+    QList<QByteArray> cmds;
+    foreach (auto l, commands) {
+        cmds.append(l.toUtf8());
+
     }
+    queue.pushMany(cmds.begin(),cmds.end());
+//    foreach (auto cmd, commands) {
+
+//        serial->write(cmd.toStdString().c_str());
+//        qDebug()<<cmd;
+//    }
     console->printMessage("File sent");
 
 }
@@ -222,13 +232,14 @@ void MainWindow::openSerialPort()
 {
 
     auto settings = rsSettings->settings();
-    serial->setBaudRate(settings.baudRate);
-    serial->setPort(QSerialPortInfo(settings.name));
-    serial->setDataBits(settings.dataBits);
-    serial->setFlowControl(settings.flowControl);
-    serial->setParity(settings.parity);
-    serial->setStopBits(settings.stopBits);
-    if(serial->open(QIODevice::ReadWrite))
+    serial->WriteSettings(settings.name,settings.baudRate,settings.dataBits,settings.parity,settings.stopBits,settings.flowControl);
+//    serial->setBaudRate(settings.baudRate);
+//    serial->setPort(QSerialPortInfo(settings.name));
+//    serial->setDataBits(settings.dataBits);
+//    serial->setFlowControl(settings.flowControl);
+//    serial->setParity(settings.parity);
+//    serial->setStopBits(settings.stopBits);
+    if(serial->open())
     {
         console->printMessage("Connection established");
         //console->setEnabled(true);
@@ -237,9 +248,10 @@ void MainWindow::openSerialPort()
         connected = true;
         ui->actionSettings->setEnabled(false);
         ui->actionSend->setEnabled(true);
+        serial->start();
     }
     else{
-        QMessageBox::critical(this,tr("Connection Error"),serial->errorString()+serial->error());
+        QMessageBox::critical(this,tr("Connection Error"),serial->port.errorString()+serial->port.error());
     }
 }
 
@@ -255,6 +267,7 @@ void MainWindow::closeSerialPort()
     ui->actionSend->setEnabled(false);
     connected=false;
     ui->actionConnect->setIcon(QIcon(":/rc/disconnected.png"));
+    serial->terminate();
 }
 
 void MainWindow::setUIStyle()
