@@ -16,6 +16,7 @@
 #include "syntaxcheck.h"
 #include "interpreter.h"
 #include "serialport.h"
+#include <QListIterator>
 namespace Ui {
 class MainWindow;
 }
@@ -23,7 +24,7 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
+    static const int MaxRecentFiles=4;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -39,6 +40,7 @@ private slots:
        int compile();
        void on_actionSettings_triggered();
        void about();
+       void openRecentFile();
 
 private:
     Ui::MainWindow *ui;
@@ -47,6 +49,8 @@ private:
     SerialPort *serial;
     QString currentFileName;
     Interpreter *interpreter;
+    QStringList recentFiles;
+    QAction *(recentFilesAction[MaxRecentFiles]);
     bool connected = false;
     void openSerialPort();
     void closeSerialPort();
@@ -65,6 +69,8 @@ private:
     bool okToContinue();
     bool loadFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
+    QString strippedName(const QString &name);
+    void updateRecentFilesAction();
 
 };
 

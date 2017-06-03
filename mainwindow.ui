@@ -56,6 +56,7 @@
    <addaction name="actionNew"/>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="actionToolBar">
    <property name="windowTitle">

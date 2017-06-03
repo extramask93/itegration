@@ -73,6 +73,44 @@ void MainWindow::setCurrentFile(const QString &fileName)
 {
     currentFileName=fileName;
     ui->editor->setWindowModified(false);
+    //TODO
+    QString shownName = tr("Untitled");
+    if(!currentFileName.isEmpty())
+    {
+        shownName=strippedName(currentFileName);
+        recentFiles.removeAll(currentFileName);
+        recentFiles.prepend(currentFileName);
+        updateRecentFilesAction();
+    }
+    setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(tr("Script")));
+}
+
+QString MainWindow::strippedName(const QString &name)
+{
+    return QFileInfo(name).fileName();
+}
+
+void MainWindow::updateRecentFilesAction()
+{
+    QMutableStringListIterator i(recentFiles);
+    while(i.hasNext())
+    {
+        if(!QFile::exists(i.next()))
+            i.remove();
+    }
+    for(int j=0;j<MaxRecentFiles;++j)
+    {
+        if(j<recentFiles.count())
+        {
+
+            QString text=tr("&%1 %2").arg(j+1).arg(strippedName(recentFiles[j]));
+            recentFilesAction[j]->setText(text);
+            recentFilesAction[j]->setData(recentFiles[j]);
+            recentFilesAction[j]->setVisible(true);
+        }
+        else
+            recentFilesAction[j]->setVisible(false);
+    }
 }
 
 bool MainWindow::okToContinue()
@@ -127,14 +165,26 @@ bool MainWindow::saveAs()
 
 }
 
+
 void MainWindow::setupFileMenu()
 {
     QMenu *fileMenu = new QMenu(tr("&File"), this);
+    for(int i=0;i<MaxRecentFiles;i++)
+    {
+        recentFilesAction[i]=new QAction(this);
+        recentFilesAction[i]->setVisible(false);
+        connect(recentFilesAction[i],SIGNAL(triggered()),this,SLOT(openRecentFile()));
+    }
     menuBar()->addMenu(fileMenu);
     fileMenu->addAction(tr("&New"), this, SLOT(newFile()), QKeySequence::New);
     fileMenu->addAction(tr("&Open..."), this, SLOT(open()), QKeySequence::Open);
     fileMenu->addAction(tr("&Save"),this, SLOT(save()),QKeySequence::Save);
     fileMenu->addAction(tr("&Save As..."),this, SLOT(saveAs()),QKeySequence::SaveAs);
+    fileMenu->addSeparator();
+    for(int i=0;i<MaxRecentFiles;++i)
+    {
+        fileMenu->addAction(recentFilesAction[i]);
+    }
     fileMenu->addAction(tr("E&xit"), qApp, SLOT(quit()), QKeySequence::Quit);
 }
 void MainWindow::setupEditMenu()
@@ -177,6 +227,16 @@ void MainWindow::setupActions()
    QWidget::connect(ui->actionCheckSyntax, SIGNAL(triggered(bool)),this, SLOT(compile())); //TODO
    QWidget::connect(ui->actionSend, SIGNAL(triggered(bool)),this, SLOT(trySend())); //TODO
 }
+void MainWindow::openRecentFile()
+{
+    if(okToContinue())
+    {
+        QAction *action = qobject_cast<QAction*>(sender());
+        if(action)
+            loadFile(action->data().toString());
+    }
+}
+
 int MainWindow::compile()
 {
     if(okToContinue())
@@ -212,11 +272,6 @@ void MainWindow::trySend()
 
     }
     queue.pushMany(cmds.begin(),cmds.end());
-//    foreach (auto cmd, commands) {
-
-//        serial->write(cmd.toStdString().c_str());
-//        qDebug()<<cmd;
-//    }
     console->printMessage("File sent");
 
 }
@@ -233,12 +288,6 @@ void MainWindow::openSerialPort()
 
     auto settings = rsSettings->settings();
     serial->WriteSettings(settings.name,settings.baudRate,settings.dataBits,settings.parity,settings.stopBits,settings.flowControl);
-//    serial->setBaudRate(settings.baudRate);
-//    serial->setPort(QSerialPortInfo(settings.name));
-//    serial->setDataBits(settings.dataBits);
-//    serial->setFlowControl(settings.flowControl);
-//    serial->setParity(settings.parity);
-//    serial->setStopBits(settings.stopBits);
     if(serial->open())
     {
         console->printMessage("Connection established");
