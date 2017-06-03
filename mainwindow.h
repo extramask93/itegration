@@ -17,6 +17,7 @@
 #include "interpreter.h"
 #include "serialport.h"
 #include <QListIterator>
+#include <QSettings>
 namespace Ui {
 class MainWindow;
 }
@@ -41,6 +42,7 @@ private slots:
        void on_actionSettings_triggered();
        void about();
        void openRecentFile();
+       void saveSettings();
 
 private:
     Ui::MainWindow *ui;
@@ -71,6 +73,7 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &name);
     void updateRecentFilesAction();
+    void loadSettings();
 
 };
 

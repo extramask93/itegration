@@ -29,6 +29,7 @@ void SettingsDialog::saveSettings()
 {
     QSettings settings_("Jozek","Robots");
     settings_.beginGroup("Settings");
+    settings_.remove("");
     settings_.setValue("Port",ui->portBox->currentIndex());
     settings_.setValue("Parity",ui->parityBox->currentIndex());
     settings_.setValue("StopBits",ui->stopBox->currentIndex());

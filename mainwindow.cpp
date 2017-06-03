@@ -31,10 +31,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setupHelpMenu();
     setupDocking();
     ui->actionSend->setEnabled(false);
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
 {
+    saveSettings();
     delete ui;
     delete rsSettings;
 }
@@ -56,7 +58,8 @@ void MainWindow::newFile()
 void MainWindow::open()
 {
     if(okToContinue()){
-        QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", "Move Masted Files (*.mmc)");
+        QString filter{"Move Master Command (*.mmc);; Text Files (*.txt)"};
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", filter,&filter);
         if(!fileName.isEmpty())
             loadFile(fileName);
     }
@@ -113,6 +116,33 @@ void MainWindow::updateRecentFilesAction()
     }
 }
 
+void MainWindow::saveSettings()
+{
+    QSettings settings_("Jozek","Robots");
+    settings_.beginGroup("MWSettings");
+    settings_.remove("");
+    int i=0;
+    foreach(auto str, recentFiles)
+    {
+        QString temp = "Recent" + QString::number(i++);
+        settings_.setValue(temp,str);
+    }
+
+}
+
+void MainWindow::loadSettings()
+{
+    QSettings settings_("Jozek","Robots");
+    settings_.beginGroup("MWSettings");
+    auto temp=settings_.allKeys();
+    foreach(auto entry,temp)
+    {
+        recentFiles.append(settings_.value(entry).toString());
+        qDebug()<<settings_.value(entry).toString();
+    }
+    updateRecentFilesAction();
+}
+
 bool MainWindow::okToContinue()
 {
     if(ui->editor->isWindowModified())
@@ -156,7 +186,8 @@ bool MainWindow::save()
 
 bool MainWindow::saveAs()
 {
-    QString fName=QFileDialog::getSaveFileName(this,tr("Save file"),"",".mmc");
+    QString filter{"Move master command (*.mmc)"};
+    QString fName=QFileDialog::getSaveFileName(this,tr("Save file"),"",filter,&filter);
     if(fName.isEmpty())
     {
         return false;
