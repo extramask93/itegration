@@ -16,8 +16,11 @@
 #include "syntaxcheck.h"
 #include "interpreter.h"
 #include "serialport.h"
+#include "qasyncqueue.h"
+#include <QDebug>
 #include <QListIterator>
 #include <QSettings>
+
 namespace Ui {
 class MainWindow;
 }

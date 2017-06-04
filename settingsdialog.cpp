@@ -1,5 +1,6 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include "bauddialog.h"
 #include <QtSerialPort/QSerialPortInfo>
 #include <QDebug>
 #include <QSettings>
@@ -14,6 +15,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     QWidget::connect(ui->okButton,SIGNAL (clicked()),this,SLOT (apply()));
     QWidget::connect(ui->cancelButton,SIGNAL (clicked()),this,SLOT (hide()));
     loadSettings();
+    QWidget::connect(ui->baudBox,SIGNAL(activated(int)),this,SLOT(showCustom(int)));
 }
 
 SettingsDialog::~SettingsDialog()
@@ -33,6 +35,7 @@ void SettingsDialog::saveSettings()
     settings_.setValue("Port",ui->portBox->currentIndex());
     settings_.setValue("Parity",ui->parityBox->currentIndex());
     settings_.setValue("StopBits",ui->stopBox->currentIndex());
+    settings_.setValue("CustomBaud",ui->baudBox->currentText());
     settings_.setValue("Baud",ui->baudBox->currentIndex());
     settings_.setValue("DataBits",ui->dataBox->currentIndex());
     settings_.setValue("Flow",ui->flowBox->currentIndex());
@@ -51,6 +54,8 @@ void SettingsDialog::loadSettings()
     ui->dataBox->setCurrentIndex(settings_.value("DataBits").toInt());
     ui->flowBox->setCurrentIndex(settings_.value("Flow").toInt());
     ui->portBox->setCurrentIndex(settings_.value("Port").toInt());
+    ui->baudBox->removeItem(4);
+    ui->baudBox->insertItem(4,settings_.value("CustomBaud").toString());
     updateSettings();
 
 }
@@ -61,10 +66,29 @@ void SettingsDialog::apply()
     saveSettings();
     hide();
 }
+
+void SettingsDialog::showCustom(int index)
+{
+    if(index!=4)
+        return;
+    baudDialog dialog{this};
+    dialog.setModal(true);
+    if(dialog.exec()==QDialog::Accepted)
+    {
+        int val=dialog.getBaud();
+        ui->baudBox->removeItem(4);
+        ui->baudBox->insertItem(4,tr("Custom, %1").arg(QString::number(val)));
+        ui->baudBox->setCurrentIndex(4);
+    }
+}
 void SettingsDialog::updateSettings()
 {
     if(ui->baudBox->currentIndex()==4)
-        currentSettings.baudRate = ui->baudBox->currentText().toInt();
+    {
+        QStringList list = ui->baudBox->currentText().split(',');
+        list[1]=list[1].trimmed();
+        currentSettings.baudRate = list[1].toInt();
+    }
      else
         currentSettings.baudRate = static_cast<QSerialPort::BaudRate>(
                     ui->baudBox->itemData(ui->baudBox->currentIndex()).toInt());
@@ -104,7 +128,7 @@ void SettingsDialog::initFields()
     ui->baudBox->addItem(QStringLiteral("19200"), QSerialPort::Baud19200);
     ui->baudBox->addItem(QStringLiteral("38400"), QSerialPort::Baud38400);
     ui->baudBox->addItem(QStringLiteral("115200"), QSerialPort::Baud115200);
-    ui->baudBox->addItem(tr("Custom"));
+    ui->baudBox->addItem(tr("Custom, 1200"));
 
     ui->dataBox->addItem(QStringLiteral("5"), QSerialPort::Data5);
     ui->dataBox->addItem(QStringLiteral("6"), QSerialPort::Data6);

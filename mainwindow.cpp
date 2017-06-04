@@ -1,12 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "settingsdialog.h"
-#include "console.h"
-#include "editor.h"
-#include "interpreter.h"
-#include "qasyncqueue.h"
-#include <QDebug>
-#include <QSerialPortInfo>
+
 //global queue holds data to send
 constexpr const unsigned int sQ = 20;
 QAsyncQueue<QByteArray> queue{sQ};
@@ -186,7 +180,7 @@ bool MainWindow::save()
 
 bool MainWindow::saveAs()
 {
-    QString filter{"Move master command (*.mmc)"};
+    QString filter{"Move Master Command (*.mmc);; Text Files (*.txt)"};
     QString fName=QFileDialog::getSaveFileName(this,tr("Save file"),"",filter,&filter);
     if(fName.isEmpty())
     {

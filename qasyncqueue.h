@@ -13,7 +13,7 @@ QMutex mutex_;
 int max_;
 
 public:
-QAsyncQueue(uint max = -1)
+QAsyncQueue(int max = -1)
     : max_{max}
 {
 }

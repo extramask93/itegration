@@ -2,7 +2,8 @@
 #define SETTINGSDIALOG_H
 #include <QDialog>
 #include <QtSerialPort/QSerialPort>
-
+#include <QMessageBox>
+#include "bauddialog.h"
 namespace Ui {
 class SettingsDialog;
 }
@@ -32,6 +33,7 @@ public:
     Settings settings() const;
 public slots:
         void apply();
+        void showCustom(int index);
 
 private:
     void saveSettings();
