@@ -35,6 +35,7 @@ public:
 public slots:
     void newFile();
     bool saveFile(const QString &path = QString());
+    void updateStatusBar();
     bool saveAs();
     bool save();
     void open();
@@ -71,6 +72,7 @@ private:
     void setupActions();
     void setupConsole();
     void setupDocking();
+    void setupStatusBar();
     bool okToContinue();
     bool loadFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);

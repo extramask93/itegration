@@ -16,7 +16,6 @@ Editor::Editor(QWidget *parent):QPlainTextEdit(parent)
     highlighter = new Highlighter(document());
     QWidget::connect(this,SIGNAL(textChanged()),this,SLOT(setTextEdited()));
     lineNumberArea = new LineNumberArea(this);
-
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
     connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
     //connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
@@ -48,19 +47,6 @@ bool Editor::writeFile(const QString &fileName)
     else
         return false;
 }
-//void Editor::clearErrors()
-//void Editor::paintErrors(QList<Result> errors)
-//{
-//    textColor()
-//    foreach(auto error, errors){
-//        QTextBlock block_ = document()->findBlockByNumber(error.lineNr-1);
-//        QTextCursor cursor_(block_);
-//        QTextBlockFormat format = cursor_.blockFormat();
-//        format.setBackground(Qt::red);
-//        cursor_.setBlockFormat(format);
-//    }
-
-//}
 
 bool Editor::readFile(const QString &fileName)
 {

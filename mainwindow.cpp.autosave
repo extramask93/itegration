@@ -43,7 +43,7 @@ void MainWindow::setupDocking()
     dock2->setWidget(ui->editor);
     dock->setWidget(console);
     addDockWidget(Qt::BottomDockWidgetArea,dock);
-    addDockWidget(Qt::TopDockWidgetArea,dock2);
+    addDockWidget(Qt::TopDockWidgetArea && Qt::C,dock2);
 }
 
 void MainWindow::updateStatusBar()
