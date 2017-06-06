@@ -40,13 +40,14 @@ public slots:
     bool save();
     void open();
     void trySend();
+    void readData();
 private slots:
-       void checkState();
-       int compile();
-       void on_actionSettings_triggered();
-       void about();
-       void openRecentFile();
-       void saveSettings();
+    void checkState();
+    int compile();
+    void on_actionSettings_triggered();
+    void about();
+    void openRecentFile();
+    void saveSettings();
 
 private:
     Ui::MainWindow *ui;

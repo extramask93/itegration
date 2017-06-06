@@ -31,6 +31,40 @@ void Console::printError(QString error)
 {
     print(error);
 }
+
+void Console::printSerial(QByteArray message)
+{
+
+    QString str;
+    foreach(unsigned char ch,message)
+    {
+        switch(ch)
+        {
+        case '\n':
+        {
+            str+="\\n"; break;
+        }
+        case '\r':
+        {
+            str+="\\r"; break;
+        }
+        case '\t':
+        {
+            str+="\\t"; break;
+        }
+        default:
+        {
+            if ((ch < 0x20) || (ch > 0x7f)) {
+                str+=tr("\\%1").arg(static_cast<int>(ch),3,8,QChar('0'));
+            } else {
+                str+=ch;
+            }
+            break;
+        }
+        }
+    }
+    print("R:"+str);
+}
 void Console::printMessage(QString message)
 {
     print(message);
@@ -231,3 +265,27 @@ void Console::contextMenuEvent(QContextMenuEvent *e)
 {
     Q_UNUSED(e)
 }
+
+//void Console::printchar(QString message)
+//{
+
+//    switch (theChar) {
+
+//        case '\n':
+//            printf("\\n\n");
+//            break;
+//        case '\r':
+//            printf("\\r");
+//            break;
+//        case '\t':
+//            printf("\\t");
+//            break;
+//        default:
+//            if ((theChar < 0x20) || (theChar > 0x7f)) {
+//                printf("\\%03o", (unsigned char)theChar);
+//            } else {
+//                printf("%c", theChar);
+//            }
+//        break;
+//   }
+//}

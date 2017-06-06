@@ -12,13 +12,28 @@
 class Editor : public QPlainTextEdit
 {
     Q_OBJECT
+    QString curFile;
+    bool isUntitled;
 private slots:
     void setTextEdited();
     void find();
 private:
-        Highlighter *highlighter;
-        QWidget *lineNumberArea;
+    //
+//    bool okToContinue();
+//    bool saveFile(const QString &fileName);
+//    void setCurrentFile(const QString &fileName);
+//    bool readFile(const QString &fileName);
+//    bool writeFile(const QString &fileName);
+//    QString strippedName(const QString &fullFileName);
+    //
+    Highlighter *highlighter;
+    QWidget *lineNumberArea;
 public:
+    //
+//    void newFile();
+//    bool save();
+//    bool saveAs();
+    //
     Editor(QWidget *parent);
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();

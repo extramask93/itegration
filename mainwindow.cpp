@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 
 //global queue holds data to send
-constexpr const unsigned int sQ = 20;
+constexpr const unsigned int sQ = 50;
 QAsyncQueue<QByteArray> queue{sQ};
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -27,6 +27,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setupStatusBar();
     ui->actionSend->setEnabled(false);
     loadSettings();
+}
+
+void MainWindow::readData()
+{
+    QByteArray dat = serial->port.readAll();
+    console->printSerial(dat);
 }
 
 MainWindow::~MainWindow()
@@ -57,6 +63,7 @@ void MainWindow::updateStatusBar()
 void MainWindow::setupStatusBar()
 {
     connect(ui->editor,SIGNAL(cursorPositionChanged()),this,SLOT(updateStatusBar()));
+    connect(&(serial->port), &QSerialPort::readyRead, this, &MainWindow::readData);
 }
 
 void MainWindow::newFile()
@@ -171,7 +178,7 @@ void MainWindow::setupConsole()
 {
     console->setEnabled(true);
     QWidget::connect(console,SIGNAL(commandIssued(QString)),interpreter,SLOT(processCommand(QString)));
-    QWidget::connect(interpreter,SIGNAL(robotCommandIssued(QByteArray)),serial,SLOT(writeS(QByteArray)));
+    //QWidget::connect(interpreter,SIGNAL(robotCommandIssued(QByteArray)),serial,SLOT(writeS(QByteArray)));
 }
 
 

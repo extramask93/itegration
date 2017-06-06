@@ -25,6 +25,7 @@ public:
     void setPrefixColor(const QColor &color);
     virtual void  printMessage(QString message) override;
     virtual void printError(QString) override ;
+    void printSerial(QByteArray message);
 
 private:
     bool localEchoEnabled;

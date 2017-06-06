@@ -24,7 +24,9 @@ void SerialPort::run()
     {
         while(!queue.isEmpty() && run_)
         {
-            port.write(queue.pull());
+            auto data = queue.pull();
+            port.write(data);
+            port.flush();
             QThread::msleep(300);
         }
         QThread::msleep(100);
