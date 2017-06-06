@@ -6,7 +6,13 @@
 #include <tuple>
 
 SyntaxCheck::SyntaxCheck(QObject *parent) : QObject(parent){
-   loadDatabase();
+    try{
+        loadDatabase();
+    }
+    catch(std::exception ex)
+    {
+        QMessageBox::warning(nullptr,"Database error",ex.what(),QMessageBox::Ok);
+    }
 
 }
 Result SyntaxCheck::checkLine(QString line,bool ommitUnknown)
@@ -47,7 +53,7 @@ int SyntaxCheck::checkFile(QString filename)
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly))
     {
-        return 1;
+        throw std::runtime_error("Can not open the file for compilation");
     }
     QTextStream in(&file);
     int counter =0;
@@ -71,8 +77,14 @@ int SyntaxCheck::checkFile(QString filename)
 
 bool SyntaxCheck::loadDatabase()
 {
-    if(!loadJson())
-        return false;
+    try
+    {
+        loadJson();
+    }
+    catch(std::exception &ex)
+    {
+        throw;
+    }
     QJsonObject json(jsonDoc.object());
     QStringList values;
     foreach(QString key,json.keys())
@@ -86,8 +98,7 @@ bool SyntaxCheck::loadJson()
 {
     QFile databaseFile(":/rc/database.txt");
     if (!databaseFile.open(QIODevice::ReadOnly)) {
-        qWarning("Couldn't open save file.");
-        return false;
+        throw std::runtime_error(std::string("Couldn't file containing syntax rules, by default no checking will take place."));
     }
     QByteArray databaseData = databaseFile.readAll();
     databaseFile.close();

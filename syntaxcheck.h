@@ -6,6 +6,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QHash>
+#include <QMessageBox>
+#include <exception>
 #include "result.h"
 
 class SyntaxCheck : public QObject

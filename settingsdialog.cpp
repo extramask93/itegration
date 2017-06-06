@@ -41,7 +41,6 @@ void SettingsDialog::saveSettings()
     settings_.setValue("Flow",ui->flowBox->currentIndex());
     settings_.setValue("Port",ui->portBox->currentIndex());
     settings_.endGroup();
-    qDebug() << settings_.fileName();
 }
 void SettingsDialog::loadSettings()
 {

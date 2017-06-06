@@ -50,6 +50,7 @@ private slots:
     void saveSettings();
 
 private:
+    void closeEvent(QCloseEvent *event) override;
     Ui::MainWindow *ui;
     SettingsDialog *rsSettings;
     Console *console;

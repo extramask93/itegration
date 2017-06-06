@@ -148,6 +148,7 @@ void MainWindow::saveSettings()
 
 }
 
+
 void MainWindow::loadSettings()
 {
     QSettings settings_("Jozek","Robots");
@@ -234,8 +235,18 @@ void MainWindow::setupFileMenu()
     {
         fileMenu->addAction(recentFilesAction[i]);
     }
-    fileMenu->addAction(tr("E&xit"), qApp, SLOT(quit()), QKeySequence::Quit);
+    fileMenu->addAction(tr("E&xit"), this, SLOT(close()), QKeySequence::Quit);
 }
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(okToContinue())
+    {
+        event->accept();
+    }
+    else
+       event->ignore();
+}
+
 void MainWindow::setupEditMenu()
 {
     QMenu *editMenu = new QMenu(tr("&Edit"),this);
@@ -290,15 +301,17 @@ int MainWindow::compile()
 {
     if(okToContinue())
     {
-        if(interpreter->processScript(currentFileName))
+        try
         {
+            interpreter->processScript(currentFileName);
+        }
+        catch(std::runtime_error &ex)
+        {
+            QMessageBox::critical(this,"Syntax check Error!",ex.what(),QMessageBox::Ok);
             return 1;
         }
-        else
-        {
-            return 0;
-        }
-        console->prepareCommandLine();
+        console->printMessage("Syntax Ok");
+        return 0;
     }
     else
         return 1;
@@ -306,11 +319,15 @@ int MainWindow::compile()
 
 void MainWindow::trySend()
 {
+
     if(compile())
+    {
         return;
+    }
+
     if(!serial->isOpen())
     {
-        console->printError("Serial connection not established");
+        QMessageBox::critical(this,"Connection Error!","Serial connection not established",QMessageBox::Ok);
         return;
     }
     Numberer numberer;
@@ -340,7 +357,7 @@ void MainWindow::openSerialPort()
     if(serial->open())
     {
         console->printMessage("Connection established");
-        //console->setEnabled(true);
+        console->setEnabled(true);
         console->setLocalEchoEnabled(settings.localEchoEnabled);
         ui->actionConnect->setIcon(QIcon(":/rc/connected.png"));
         connected = true;
@@ -360,7 +377,7 @@ void MainWindow::closeSerialPort()
         serial->close();
         console->printMessage("Disconnected");
     }
-    //console->setEnabled(false);
+    console->setEnabled(false);
     ui->actionSettings->setEnabled(true);
     ui->actionSend->setEnabled(false);
     connected=false;
@@ -373,7 +390,7 @@ void MainWindow::setUIStyle()
     QFile f(":qdarkstyle/style.qss");
     if (!f.exists())
     {
-        printf("Unable to set stylesheet, file not found\n");
+        QMessageBox::warning(this,"Warning","Unable to set stylesheet, file not found",QMessageBox::Ok);
     }
     else
     {

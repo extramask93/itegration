@@ -18,7 +18,6 @@ void Interpreter::processCommand(QString command)
         if(!result.errorCode)
         {
             auto commandByte = command.toLocal8Bit();
-            //emit robotCommandIssued(commandByte.append('\r'));
             queue.push(commandByte.append('\r'));
         }
         else
