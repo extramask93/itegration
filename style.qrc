@@ -56,6 +56,8 @@
 	  <file>rc/run.png</file>
 	  <file>rc/open.png</file>
 	  <file>rc/save.png</file>
+	  <file>rc/dictionary.png</file>
+	  <file>rc/dictionary_off.png</file>
   </qresource>
   
 </RCC>

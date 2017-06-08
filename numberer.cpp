@@ -7,18 +7,18 @@ Numberer::Numberer(QObject *parent) : QObject(parent)
 {
 
 }
-QStringList Numberer::number(QString fileName)
+QStringList Numberer::number(QString fileName,QChar endChar)
 {
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        throw ;
+        throw std::runtime_error("cant open the file");
     QTextStream in(&file);
     QStringList result;
     int i=1;
     while(!in.atEnd())
     {
         QString line=in.readLine();
-        line=QString::number(i)+' '+line+'\r';
+        line=QString::number(i)+' '+line+endChar;
         i++;
         result.append(line);
     }

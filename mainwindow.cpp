@@ -20,11 +20,13 @@ MainWindow::MainWindow(QWidget *parent) :
     setupFileMenu();
     setupEditMenu();
     setupToolsMenu();
+    setupDocking();
     setupSettingsMenu();
+    setupWindowMenu();
     setupActions();
     setupHelpMenu();
-    setupDocking();
     setupStatusBar();
+    setupCheckIcons();
     ui->actionSend->setEnabled(false);
     loadSettings();
 }
@@ -44,8 +46,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupDocking()
 {
-    QDockWidget *dock = new QDockWidget(tr("Terminal:"),this);
-    QDockWidget *dock2 = new QDockWidget(tr("Editor:"),this);
+    dock = new QDockWidget(tr("Terminal:"),this);
+    dock2 = new QDockWidget(tr("Editor:"),this);
     dock2->setWidget(ui->editor);
     dock->setWidget(console);
     addDockWidget(Qt::BottomDockWidgetArea,dock);
@@ -64,6 +66,21 @@ void MainWindow::setupStatusBar()
 {
     connect(ui->editor,SIGNAL(cursorPositionChanged()),this,SLOT(updateStatusBar()));
     connect(&(serial->port), &QSerialPort::readyRead, this, &MainWindow::readData);
+}
+
+void MainWindow::setupCheckIcons()
+{
+
+    if(interpreter->isCheckingOn())
+    {
+        ui->actionOffSyntaxCheck->setIcon(QIcon(":/rc/dictionary.png"));
+        ui->actionCheckSyntax->setDisabled(false);
+    }
+    else
+    {
+        ui->actionOffSyntaxCheck->setIcon(QIcon(":/rc/dictionary_off.png"));
+        ui->actionCheckSyntax->setDisabled(true);
+    }
 }
 
 void MainWindow::newFile()
@@ -189,6 +206,7 @@ bool MainWindow::saveFile(const QString &fileName)
         return false;
     }
     setCurrentFile(fileName);
+    ui->statusBar->showMessage("Saved",2000);
     return true;
 
 }
@@ -215,6 +233,36 @@ bool MainWindow::saveAs()
 
 }
 
+void MainWindow::print()
+{
+    QString filter{"Text Files (*.txt)"};
+    QString fName=QFileDialog::getSaveFileName(this,tr("Save file"),"",filter,&filter);
+    if(fName.isEmpty())
+    {
+        return;
+    }
+    else
+    {
+        QFile file{fName};
+        file.open(QIODevice::WriteOnly|QIODevice::Text);
+        Numberer numb;
+        QStringList lines;
+        try{
+        lines=numb.number(currentFileName,'\n');}
+        catch(std::exception &ex)
+        {
+            QMessageBox::warning(nullptr,"Print error",ex.what(),QMessageBox::Ok);
+        }
+
+        QTextStream out{&file};
+        foreach (auto line, lines) {
+            out<<line;
+        }
+        file.close();
+        ui->statusBar->showMessage("Printed",2000);
+    }
+}
+
 
 void MainWindow::setupFileMenu()
 {
@@ -235,6 +283,7 @@ void MainWindow::setupFileMenu()
     {
         fileMenu->addAction(recentFilesAction[i]);
     }
+    fileMenu->addAction(tr("&Print"),this,SLOT(print()),QKeySequence::Print);
     fileMenu->addAction(tr("E&xit"), this, SLOT(close()), QKeySequence::Quit);
 }
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -278,6 +327,14 @@ void MainWindow::setupHelpMenu()
     menuBar()->addMenu(helpMenu);
     helpMenu->addAction(tr("&About"), this, SLOT(about()));
 }
+
+void MainWindow::setupWindowMenu()
+{
+    QMenu *windowMenu = new QMenu(tr("&Window"),this);
+    menuBar()->addMenu(windowMenu);
+    windowMenu->addAction("Editor Window",this->dock2,SLOT(show()));
+    windowMenu->addAction("Console Window",this->dock,SLOT(show()));
+}
 void MainWindow::setupActions()
 {
    QWidget::connect(ui->actionNew, SIGNAL(triggered(bool)),this, SLOT(newFile()));
@@ -286,6 +343,9 @@ void MainWindow::setupActions()
    QWidget::connect(ui->actionConnect, SIGNAL(triggered(bool)),this, SLOT(checkState()));
    QWidget::connect(ui->actionCheckSyntax, SIGNAL(triggered(bool)),this, SLOT(compile())); //TODO
    QWidget::connect(ui->actionSend, SIGNAL(triggered(bool)),this, SLOT(trySend())); //TODO
+   QWidget::connect(ui->actionOffSyntaxCheck,SIGNAL(triggered(bool)),interpreter,SLOT(toggleChecker()));
+   QWidget::connect(interpreter,SIGNAL(changed()),this,SLOT(setupCheckIcons()));
+   QWidget::connect(interpreter,SIGNAL(controlCommandIssued(QString)),this->console,SLOT(clear(QString)));
 }
 void MainWindow::openRecentFile()
 {

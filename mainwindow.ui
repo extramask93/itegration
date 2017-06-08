@@ -488,6 +488,7 @@
    <addaction name="actionSend"/>
    <addaction name="actionCheckSyntax"/>
    <addaction name="actionSettings"/>
+   <addaction name="actionOffSyntaxCheck"/>
   </widget>
   <action name="actionSettings">
    <property name="icon">
@@ -556,6 +557,19 @@
    </property>
    <property name="text">
     <string>Open</string>
+   </property>
+  </action>
+  <action name="actionOffSyntaxCheck">
+   <property name="icon">
+    <iconset resource="style.qrc">
+     <normaloff>:/rc/dictionary_off.png</normaloff>
+     <normalon>:/rc/dictionary.png</normalon>:/rc/dictionary_off.png</iconset>
+   </property>
+   <property name="text">
+    <string>offSyntaxCheck</string>
+   </property>
+   <property name="toolTip">
+    <string>offSyntaxCheck</string>
    </property>
   </action>
  </widget>

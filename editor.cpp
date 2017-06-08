@@ -129,6 +129,8 @@ void Editor::find()
 {
 
 }
+
+
 ////////////
 //bool Editor::okToContinue()
 //{

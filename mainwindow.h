@@ -37,10 +37,12 @@ public slots:
     bool saveFile(const QString &path = QString());
     void updateStatusBar();
     bool saveAs();
+    void print();
     bool save();
     void open();
     void trySend();
     void readData();
+    void setupCheckIcons();
 private slots:
     void checkState();
     int compile();
@@ -56,6 +58,8 @@ private:
     Console *console;
     SerialPort *serial;
     QString currentFileName;
+    QDockWidget *dock;
+    QDockWidget *dock2;
     Interpreter *interpreter;
     QStringList recentFiles;
     QAction *(recentFilesAction[MaxRecentFiles]);
@@ -71,6 +75,7 @@ private:
     void setupSettingsMenu();
     void setupHelpMenu();
     void setupToolBar();
+    void setupWindowMenu();
     void setupActions();
     void setupConsole();
     void setupDocking();

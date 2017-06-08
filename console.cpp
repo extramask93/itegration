@@ -215,6 +215,13 @@ void Console::prepareCommandLine(){ //must be called after successfull command e
     setTextCursor(cur);
     commandLineReady = true;
 }
+
+void Console::clear(QString command)
+{
+    if(command!="!clear")
+        return;
+    document()->clear();
+}
 void Console::setPrefixColor(const QColor&color)
 {
     prefixColor=color;

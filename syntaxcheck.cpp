@@ -11,12 +11,15 @@ SyntaxCheck::SyntaxCheck(QObject *parent) : QObject(parent){
     }
     catch(std::exception ex)
     {
+        setOn(false);
         QMessageBox::warning(nullptr,"Database error",ex.what(),QMessageBox::Ok);
     }
 
 }
 Result SyntaxCheck::checkLine(QString line,bool ommitUnknown)
 {
+   if(!isOn())
+       return Result(0,0,"Ommited");
    line = line.trimmed();
    QString cmdPattern = "^\\w{2,5}\\s+[0-9A-Za-z,]*\\s*($|\')";
    QRegExp cmdrx1(cmdPattern,Qt::CaseInsensitive);
@@ -49,6 +52,8 @@ Result SyntaxCheck::checkLine(QString line,bool ommitUnknown)
 }
 int SyntaxCheck::checkFile(QString filename)
 {
+    if(!isOn())
+        return 0;
     errorlist.clear();
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly))
@@ -87,12 +92,39 @@ bool SyntaxCheck::loadDatabase()
     }
     QJsonObject json(jsonDoc.object());
     QStringList values;
+    database.clear();
     foreach(QString key,json.keys())
     {
         database.insert(key,json[key].toString());
     }
     return true;
 }
+
+bool SyntaxCheck::isOn()
+{
+    return on;
+}
+
+void SyntaxCheck::setOn(bool state)
+{
+    if(!state)
+    {
+        on=false;
+        return;
+    }
+    try
+    {
+        loadDatabase();
+    }
+    catch(std::exception &ex)
+    {
+        on=false;
+        QMessageBox::warning(nullptr,"Database error",ex.what(),QMessageBox::Ok);
+        return;
+    }
+    on=state;
+}
+
 
 bool SyntaxCheck::loadJson()
 {

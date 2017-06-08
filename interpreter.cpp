@@ -6,6 +6,22 @@ Interpreter::Interpreter(IPrinter *console_,QObject *parent) : QObject(parent), 
 {
     console=console_;
 }
+
+bool Interpreter::isCheckingOn()
+{
+    return checker.isOn();
+}
+
+void Interpreter::setCheckingOn(bool state)
+{
+    checker.setOn(state);
+    if(checker.isOn())
+        checking=true;
+    else
+        checking=false;
+    emit changed();
+
+}
 void Interpreter::processCommand(QString command)
 {
     if(command[0]=='!')
@@ -35,6 +51,8 @@ int Interpreter::processScript(QString fileName)
     }
     else
     {
+        if(!isCheckingOn())
+            return 0;
         foreach(auto result,checker.errorlist)
         {
             console->printError("Line "+QString::number(result.lineNr)+": "+result.errorString);
@@ -45,6 +63,14 @@ int Interpreter::processScript(QString fileName)
         else
             return 0;
     }
+}
+
+void Interpreter::toggleChecker()
+{
+    if(isCheckingOn())
+        setCheckingOn(false);
+    else
+        setCheckingOn(true);
 }
 
 

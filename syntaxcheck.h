@@ -21,10 +21,13 @@ public:
     bool loadDatabase();
     QList<Result> errorlist;
     Result takaFunkcja();
+    bool isOn();
+    void setOn(bool);
 signals:
 private:
     QJsonDocument jsonDoc;
     QHash<QString,QString> database;
+    bool on;
 
 
 
