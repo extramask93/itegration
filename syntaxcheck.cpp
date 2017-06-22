@@ -123,6 +123,20 @@ void SyntaxCheck::setOn(bool state)
         return;
     }
     on=state;
+    ///
+//    bool filled = false;
+//    for(int i=1;i<=8;i++)
+//    {
+//        for(int j=1;j<=8;j++)
+//        {
+//            rectangle.draw(filled);
+//            rectangle.moveToTheNextColumn();
+//            filled=!filled;
+//        }
+//        filled=!filled;
+//        rectangle.moveToTheNextRow();
+//    }
+    //
 }
 
 
