@@ -11,13 +11,13 @@ class baudDialog;
 class baudDialog : public QDialog
 {
     Q_OBJECT
-    int val;
+    unsigned int currentBaudValue;
 public:
     explicit baudDialog(QWidget *parent = 0);
     int getBaud();
 
     ~baudDialog();
-public slots:
+private slots:
     void check();
 private:
     Ui::baudDialog *ui;

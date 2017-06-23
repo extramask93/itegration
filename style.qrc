@@ -46,6 +46,7 @@
    <qresource>
       <file alias="robot.png">rc/robot.png</file>
 	  <file>rc/settings.png</file>
+	  <file>rc/upload.png</file>
 	  <file>rc/database.txt</file>
 	  <file>rc/foo2.txt</file>
 	  <file>rc/newFile.png</file>
@@ -58,6 +59,7 @@
 	  <file>rc/save.png</file>
 	  <file>rc/dictionary.png</file>
 	  <file>rc/dictionary_off.png</file>
+	  <file>rc/stop.png</file>
   </qresource>
   
 </RCC>

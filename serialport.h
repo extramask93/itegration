@@ -18,9 +18,14 @@ public:
     void WriteSettings(QString name, int baudrate,int DataBits,int Parity,int StopBits, int FlowControl);
     void close();
     bool open();
+
 public slots:
     int writeS(const QByteArray &data);
     int write(const char *data);
+    void read();
+signals:
+    void writeTimeOut();
+    void messageArrived(QByteArray message);
 };
 
 #endif // SERIALPORT_H

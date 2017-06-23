@@ -5,6 +5,7 @@
 #include <QColor>
 #include "interpreter.h"
 #include "iprinter.h"
+#include "logger.h"
 
 namespace Ui {
 class Console;
@@ -16,6 +17,7 @@ class Console : public QPlainTextEdit, public IPrinter
 
 public:
     explicit Console(QWidget *parent = nullptr);
+    ~Console();
     void setPrefix(const QString &prefix);
     QString getPrefix()const {return prefix;}
     void processCommand();
@@ -25,7 +27,6 @@ public:
     void setPrefixColor(const QColor &color);
     virtual void  printMessage(QString message) override;
     virtual void printError(QString) override ;
-    void printSerial(QByteArray message);
 
 private:
     bool localEchoEnabled;
@@ -34,6 +35,8 @@ private:
     QStringList history;
     QString prefix;
     bool commandLineReady;
+    Logger* logger;
+
 
 signals:
     void getData(const QByteArray &data);
@@ -42,6 +45,7 @@ public slots:
     void print(QString str);
     void prepareCommandLine();
     void clear(QString command);
+    void printSerial(QByteArray message);
 protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;

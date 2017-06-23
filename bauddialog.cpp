@@ -9,21 +9,21 @@ baudDialog::baudDialog(QWidget *parent) :
     connect(ui->okButton,SIGNAL (clicked()),this,SLOT (check()));
     connect(ui->cancelButton,SIGNAL (clicked()),this, SLOT (reject()));
 }
-void baudDialog::check()
-{
-   auto str = ui->lineEdit->text();
-   bool okz;
-   str.toInt(&okz);
-   if(okz)
-       done(QDialog::Accepted);
-   else
-     QMessageBox::warning(this,tr("Error"),tr("Baud Rate is supposed to be non negative integer"),QMessageBox::Ok);
-}
 
 int baudDialog::getBaud()
 {
-    auto str = ui->lineEdit->text();
-    return str.toInt();
+    return currentBaudValue;
+}
+
+void baudDialog::check()
+{
+   auto baudRateAsString = ui->lineEdit->text();
+   bool isStringANumber;
+   currentBaudValue=baudRateAsString.toUInt(&isStringANumber);
+   if(isStringANumber)
+       done(QDialog::Accepted);
+   else
+     QMessageBox::warning(this,tr("Error"),tr("Baud Rate is supposed to be non negative integer"),QMessageBox::Ok);
 }
 
 baudDialog::~baudDialog()

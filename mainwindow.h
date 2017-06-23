@@ -17,6 +17,7 @@
 #include "interpreter.h"
 #include "serialport.h"
 #include "qasyncqueue.h"
+#include "senddialog.h"
 #include <QDebug>
 #include <QListIterator>
 #include <QSettings>
@@ -41,8 +42,8 @@ public slots:
     bool save();
     void open();
     void trySend();
-    void readData();
     void setupCheckIcons();
+    void inform();
 private slots:
     void checkState();
     int compile();
@@ -50,6 +51,9 @@ private slots:
     void about();
     void openRecentFile();
     void saveSettings();
+    void run();
+    void stop();
+
 
 private:
     void closeEvent(QCloseEvent *event) override;
@@ -60,10 +64,11 @@ private:
     QString currentFileName;
     QDockWidget *dock;
     QDockWidget *dock2;
+    SendDialog* senddialog;
     Interpreter *interpreter;
     QStringList recentFiles;
     QAction *(recentFilesAction[MaxRecentFiles]);
-    bool connected = false;
+    bool isConnected = false;
     void openSerialPort();
     void closeSerialPort();
     void setupEditor();
@@ -72,6 +77,7 @@ private:
     void setupFileMenu();
     void setupEditMenu();
     void setupToolsMenu();
+    void setupSessionMenu();
     void setupSettingsMenu();
     void setupHelpMenu();
     void setupToolBar();
@@ -86,6 +92,9 @@ private:
     QString strippedName(const QString &name);
     void updateRecentFilesAction();
     void loadSettings();
+    void disableOnlineFunctionality(bool state=true);
+signals:
+    void lineSent(int max,int min,int current);
 
 };
 

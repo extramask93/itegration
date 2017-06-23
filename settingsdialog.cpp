@@ -22,7 +22,7 @@ SettingsDialog::~SettingsDialog()
 {
     delete ui;
 }
-SettingsDialog::Settings SettingsDialog::settings() const
+SettingsDialog::Settings SettingsDialog::getSettings() const
 {
     return currentSettings;
 }

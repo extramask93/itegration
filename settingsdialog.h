@@ -17,7 +17,6 @@ public:
     ~SettingsDialog();
     struct Settings {
         QString name;
-        //QSerialPort::ser
         qint32 baudRate;
         QString stringBaudRate;
         QSerialPort::DataBits dataBits;
@@ -30,7 +29,7 @@ public:
         QString stringFlowControl;
         bool localEchoEnabled;
     };
-    Settings settings() const;
+    Settings getSettings() const;
 public slots:
         void apply();
         void showCustom(int index);

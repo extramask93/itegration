@@ -26,6 +26,15 @@ Console::Console(QWidget *parent)
     historyPos=-1;
     commandLineReady=false;
     prepareCommandLine();
+    logger=new Logger(this);
+    history=logger->loadCommands();
+}
+
+Console::~Console()
+{
+    logger->saveCommands(history);
+    logger->saveSession();
+
 }
 void Console::printError(QString error)
 {
@@ -64,6 +73,7 @@ void Console::printSerial(QByteArray message)
         }
     }
     print("R:"+str);
+    logger->addToSession("R:"+str);
 }
 void Console::printMessage(QString message)
 {
@@ -235,6 +245,7 @@ void Console::processCommand()
     if(!inputString.trimmed().isEmpty())
         history.append(inputString);
     historyPos=-1;
+    logger->addToSession("S:"+inputString);
     inputString=inputString.trimmed(); //remove whitespaces
     QTextCursor cur(document()->lastBlock());
     cur.movePosition(QTextCursor::EndOfBlock);
@@ -273,26 +284,3 @@ void Console::contextMenuEvent(QContextMenuEvent *e)
     Q_UNUSED(e)
 }
 
-//void Console::printchar(QString message)
-//{
-
-//    switch (theChar) {
-
-//        case '\n':
-//            printf("\\n\n");
-//            break;
-//        case '\r':
-//            printf("\\r");
-//            break;
-//        case '\t':
-//            printf("\\t");
-//            break;
-//        default:
-//            if ((theChar < 0x20) || (theChar > 0x7f)) {
-//                printf("\\%03o", (unsigned char)theChar);
-//            } else {
-//                printf("%c", theChar);
-//            }
-//        break;
-//   }
-//}

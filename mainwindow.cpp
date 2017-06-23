@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     console = new Console(this);
     rsSettings = new SettingsDialog(this); //settings dialog
     serial = new SerialPort{this};
+    senddialog = new SendDialog{this};
     interpreter = new Interpreter(console,this);
     setWindowIcon(QIcon(":/robot.png"));
     ui->setupUi(this);
@@ -22,20 +23,19 @@ MainWindow::MainWindow(QWidget *parent) :
     setupToolsMenu();
     setupDocking();
     setupSettingsMenu();
+    setupSessionMenu();
     setupWindowMenu();
     setupActions();
     setupHelpMenu();
     setupStatusBar();
     setupCheckIcons();
-    ui->actionSend->setEnabled(false);
     loadSettings();
+    disableOnlineFunctionality(true);
+    connect(this,SIGNAL(lineSent(int,int,int)),senddialog,SLOT(updateProgressBar(int,int,int)));
+    connect(serial,SIGNAL(messageArrived(QByteArray)),console,SLOT(printSerial(QByteArray)));
+    connect(serial,SIGNAL(writeTimeOut()),this,SLOT(inform()));
 }
 
-void MainWindow::readData()
-{
-    QByteArray dat = serial->port.readAll();
-    console->printSerial(dat);
-}
 
 MainWindow::~MainWindow()
 {
@@ -65,7 +65,6 @@ void MainWindow::updateStatusBar()
 void MainWindow::setupStatusBar()
 {
     connect(ui->editor,SIGNAL(cursorPositionChanged()),this,SLOT(updateStatusBar()));
-    connect(&(serial->port), &QSerialPort::readyRead, this, &MainWindow::readData);
 }
 
 void MainWindow::setupCheckIcons()
@@ -165,6 +164,29 @@ void MainWindow::saveSettings()
 
 }
 
+void MainWindow::run()
+{
+    if(!okToContinue())
+        return;
+    if(currentFileName.isEmpty())
+        return;
+    const int lengthOfExtension=4;
+    QString nameWithExtension= strippedName(currentFileName);
+    nameWithExtension.chop(lengthOfExtension);
+    QString command = tr("N\"%1\"\r").arg(nameWithExtension);
+    QByteArray array = command.toLocal8Bit();
+    queue.push(array);
+    queue.push("RN\r");
+    ui->statusBar->showMessage("Running");
+}
+
+void MainWindow::stop()
+{
+    QString s="HLT\r";
+    serial->writeS(s.toLocal8Bit());
+    ui->statusBar->showMessage("Stopped");
+}
+
 
 void MainWindow::loadSettings()
 {
@@ -174,9 +196,22 @@ void MainWindow::loadSettings()
     foreach(auto entry,temp)
     {
         recentFiles.append(settings_.value(entry).toString());
-        qDebug()<<settings_.value(entry).toString();
     }
     updateRecentFilesAction();
+}
+
+void MainWindow::disableOnlineFunctionality(bool state)
+{
+    ui->actionSend->setDisabled(state);
+    ui->actionRun->setDisabled(state);
+    ui->actionStop->setDisabled(state);
+    console->setDisabled(state);
+    ui->actionSettings->setEnabled(state);
+    if(state)
+        ui->actionConnect->setIcon(QIcon(":/rc/disconnected.png"));
+    else
+        ui->actionConnect->setIcon(QIcon(":/rc/connected.png"));
+    isConnected=!state;
 }
 
 bool MainWindow::okToContinue()
@@ -288,12 +323,19 @@ void MainWindow::setupFileMenu()
 }
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if(okToContinue())
-    {
+    if(serial->isOpen())
+        serial->close();
+    if(currentFileName.isEmpty() && (ui->editor->toPlainText().isEmpty()))
         event->accept();
-    }
     else
-       event->ignore();
+    {
+        if(okToContinue())
+        {
+            event->accept();
+        }
+        else
+            event->ignore();
+    }
 }
 
 void MainWindow::setupEditMenu()
@@ -311,8 +353,16 @@ void MainWindow::setupToolsMenu()
     QMenu *toolsMenu = new QMenu(tr("&Tools"),this);
     menuBar()->addMenu(toolsMenu);
     toolsMenu->addAction(tr("&Connect"),this, SLOT(checkState()),QKeySequence("F3"));
-    toolsMenu->addAction(tr("&Send"),this, SLOT(),QKeySequence("F5"));
+    toolsMenu->addAction(tr("&Send"),this, SLOT(trySend()),QKeySequence("F5"));
+    toolsMenu->addAction(tr("&Run"),this,SLOT(run()));
+    toolsMenu->addAction(tr("&Stop"),this,SLOT(stop()));
     toolsMenu->addAction(tr("&Check Syntax"),this, SLOT(),QKeySequence("F4"));
+}
+
+void MainWindow::setupSessionMenu()
+{
+    QMenu *sessionMenu= new QMenu(tr("Session"),this);
+    menuBar()->addMenu(sessionMenu);
 }
 void MainWindow::setupSettingsMenu()
 {
@@ -327,7 +377,10 @@ void MainWindow::setupHelpMenu()
     menuBar()->addMenu(helpMenu);
     helpMenu->addAction(tr("&About"), this, SLOT(about()));
 }
-
+void MainWindow::inform()
+{
+    QMessageBox::warning(this,"Error","write timeout, please try again",QMessageBox::Ok);
+}
 void MainWindow::setupWindowMenu()
 {
     QMenu *windowMenu = new QMenu(tr("&Window"),this);
@@ -346,6 +399,8 @@ void MainWindow::setupActions()
    QWidget::connect(ui->actionOffSyntaxCheck,SIGNAL(triggered(bool)),interpreter,SLOT(toggleChecker()));
    QWidget::connect(interpreter,SIGNAL(changed()),this,SLOT(setupCheckIcons()));
    QWidget::connect(interpreter,SIGNAL(controlCommandIssued(QString)),this->console,SLOT(clear(QString)));
+   QWidget::connect(ui->actionRun,SIGNAL(triggered(bool)),this,SLOT(run()));
+   QWidget::connect(ui->actionStop,SIGNAL(triggered()),this,SLOT(stop()));
 }
 void MainWindow::openRecentFile()
 {
@@ -379,7 +434,6 @@ int MainWindow::compile()
 
 void MainWindow::trySend()
 {
-
     if(compile())
     {
         return;
@@ -392,18 +446,27 @@ void MainWindow::trySend()
     }
     Numberer numberer;
     QStringList commands=numberer.number(currentFileName);
+    int max=commands.size();
+    int min=0;
+    int current=0;
     QList<QByteArray> cmds;
-    foreach (auto l, commands) {
-        cmds.append(l.toUtf8());
-
+    senddialog->show();
+    foreach (QString l, commands) {
+       serial->writeS(l.toLocal8Bit());
+       senddialog->updateProgressBar(max,min,current);
+       current++;
+       QThread::msleep(300);
+       qApp->processEvents();
     }
-    queue.pushMany(cmds.begin(),cmds.end());
+    senddialog->updateProgressBar(max,min,max);
+    senddialog->hide();
+    //queue.pushMany(cmds.begin(),cmds.end());
     console->printMessage("File sent");
 
 }
 void MainWindow::checkState()
 {
-    if(connected)
+    if(isConnected)
         closeSerialPort();
     else
         openSerialPort();
@@ -412,18 +475,14 @@ void MainWindow::checkState()
 void MainWindow::openSerialPort()
 {
 
-    auto settings = rsSettings->settings();
+    auto settings = rsSettings->getSettings();
     serial->WriteSettings(settings.name,settings.baudRate,settings.dataBits,settings.parity,settings.stopBits,settings.flowControl);
     if(serial->open())
     {
         console->printMessage("Connection established");
-        console->setEnabled(true);
         console->setLocalEchoEnabled(settings.localEchoEnabled);
-        ui->actionConnect->setIcon(QIcon(":/rc/connected.png"));
-        connected = true;
-        ui->actionSettings->setEnabled(false);
-        ui->actionSend->setEnabled(true);
-        serial->start();
+        disableOnlineFunctionality(false);
+
     }
     else{
         QMessageBox::critical(this,tr("Connection Error"),serial->port.errorString()+serial->port.error());
@@ -437,11 +496,8 @@ void MainWindow::closeSerialPort()
         serial->close();
         console->printMessage("Disconnected");
     }
-    console->setEnabled(false);
     ui->actionSettings->setEnabled(true);
-    ui->actionSend->setEnabled(false);
-    connected=false;
-    ui->actionConnect->setIcon(QIcon(":/rc/disconnected.png"));
+    disableOnlineFunctionality();
     serial->terminate();
 }
 

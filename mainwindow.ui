@@ -486,6 +486,8 @@
    </attribute>
    <addaction name="actionConnect"/>
    <addaction name="actionSend"/>
+   <addaction name="actionRun"/>
+   <addaction name="actionStop"/>
    <addaction name="actionCheckSyntax"/>
    <addaction name="actionSettings"/>
    <addaction name="actionOffSyntaxCheck"/>
@@ -511,13 +513,13 @@
     <string>Connect</string>
    </property>
   </action>
-  <action name="actionSend">
+  <action name="actionRun">
    <property name="icon">
     <iconset resource="style.qrc">
      <normaloff>:/rc/run.png</normaloff>:/rc/run.png</iconset>
    </property>
    <property name="text">
-    <string>Send</string>
+    <string>Run</string>
    </property>
    <property name="toolTip">
     <string>Sends edited file</string>
@@ -570,6 +572,24 @@
    </property>
    <property name="toolTip">
     <string>offSyntaxCheck</string>
+   </property>
+  </action>
+  <action name="actionSend">
+   <property name="icon">
+    <iconset resource="style.qrc">
+     <normaloff>:/rc/upload.png</normaloff>:/rc/upload.png</iconset>
+   </property>
+   <property name="text">
+    <string>Send</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="style.qrc">
+     <normaloff>:/rc/stop.png</normaloff>:/rc/stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
    </property>
   </action>
  </widget>
