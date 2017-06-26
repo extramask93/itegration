@@ -61,7 +61,7 @@ private:
     Ui::MainWindow *ui;
     SettingsDialog *rsSettings;
     HelpDialog *helpdialog;
-    Console *console;
+    //Console *console;
     SerialPort *serial;
     QString currentFileName;
     QDockWidget *dock;

@@ -11,14 +11,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
 
-    console = new Console(this);
+    //console = new Console(this);
     rsSettings = new SettingsDialog(this); //settings dialog
     serial = new SerialPort{this};
     senddialog = new SendDialog{this};
     helpdialog = new HelpDialog(this);
-    interpreter = new Interpreter(console,this);
+    interpreter = new Interpreter(ui->console,this);
     setWindowIcon(QIcon(":/robot.png"));
     ui->setupUi(this);
+    ui->centralWidget->hide();
     //ui->actionOmmitUnknown->setChecked(true);
     setUIStyle();
     setupConsole();
@@ -36,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     loadSettings();
     disableOnlineFunctionality(true);
     connect(this,SIGNAL(lineSent(int,int,int)),senddialog,SLOT(updateProgressBar(int,int,int)));
-    connect(serial,SIGNAL(messageArrived(QByteArray)),console,SLOT(printSerial(QByteArray)));
+    connect(serial,SIGNAL(messageArrived(QByteArray)),ui->console,SLOT(printSerial(QByteArray)));
     connect(serial,SIGNAL(writeTimeOut()),this,SLOT(inform()));
 }
 
@@ -53,7 +54,9 @@ void MainWindow::setupDocking()
     dock = new QDockWidget(tr("Terminal:"),this);
     dock2 = new QDockWidget(tr("Editor:"),this);
     dock2->setWidget(ui->editor);
-    dock->setWidget(console);
+    dock->setWidget(ui->console);
+    dock->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);
+    dock2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     addDockWidget(Qt::BottomDockWidgetArea,dock);
     addDockWidget(Qt::TopDockWidgetArea,dock2);
 }
@@ -209,7 +212,7 @@ void MainWindow::disableOnlineFunctionality(bool state)
     ui->actionSend->setDisabled(state);
     ui->actionRun->setDisabled(state);
     ui->actionStop->setDisabled(state);
-    console->setDisabled(state);
+    ui->console->setDisabled(state);
     ui->actionSettings->setEnabled(state);
     if(state)
         ui->actionConnect->setIcon(QIcon(":/rc/disconnected.png"));
@@ -233,8 +236,8 @@ bool MainWindow::okToContinue()
 
 void MainWindow::setupConsole()
 {
-    console->setEnabled(true);
-    QWidget::connect(console,SIGNAL(commandIssued(QString)),interpreter,SLOT(processCommand(QString)));
+    ui->console->setEnabled(true);
+    QWidget::connect(ui->console,SIGNAL(commandIssued(QString)),interpreter,SLOT(processCommand(QString)));
     //QWidget::connect(interpreter,SIGNAL(robotCommandIssued(QByteArray)),serial,SLOT(writeS(QByteArray)));
 }
 
@@ -404,7 +407,7 @@ void MainWindow::setupActions()
    QWidget::connect(ui->actionSend, SIGNAL(triggered(bool)),this, SLOT(trySend())); //TODO
    QWidget::connect(ui->actionOffSyntaxCheck,SIGNAL(triggered(bool)),interpreter,SLOT(toggleChecker()));
    QWidget::connect(interpreter,SIGNAL(changed()),this,SLOT(setupCheckIcons()));
-   QWidget::connect(interpreter,SIGNAL(controlCommandIssued(QString)),this->console,SLOT(clear(QString)));
+   QWidget::connect(interpreter,SIGNAL(controlCommandIssued(QString)),ui->console,SLOT(clear(QString)));
    QWidget::connect(ui->actionRun,SIGNAL(triggered(bool)),this,SLOT(run()));
    QWidget::connect(ui->actionStop,SIGNAL(triggered()),this,SLOT(stop()));
    QWidget::connect(ui->actionOmmitUnknown,SIGNAL(triggered(bool)),interpreter,SLOT(setOmmiting(bool)));
@@ -432,7 +435,7 @@ int MainWindow::compile()
             QMessageBox::critical(this,"Syntax check Error!",ex.what(),QMessageBox::Ok);
             return 1;
         }
-        console->printMessage("Syntax Ok");
+        ui->console->printMessage("Syntax Ok");
         return 0;
     }
     else
@@ -468,7 +471,7 @@ void MainWindow::trySend()
     senddialog->updateProgressBar(max,min,max);
     senddialog->hide();
     //queue.pushMany(cmds.begin(),cmds.end());
-    console->printMessage("File sent");
+    ui->console->printMessage("File sent");
 
 }
 void MainWindow::checkState()
@@ -486,8 +489,8 @@ void MainWindow::openSerialPort()
     serial->WriteSettings(settings.name,settings.baudRate,settings.dataBits,settings.parity,settings.stopBits,settings.flowControl);
     if(serial->open())
     {
-        console->printMessage("Connection established");
-        console->setLocalEchoEnabled(settings.localEchoEnabled);
+        ui->console->printMessage("Connection established");
+        ui->console->setLocalEchoEnabled(settings.localEchoEnabled);
         disableOnlineFunctionality(false);
 
     }
@@ -501,7 +504,7 @@ void MainWindow::closeSerialPort()
     if(serial->isOpen())
     {
         serial->close();
-        console->printMessage("Disconnected");
+        ui->console->printMessage("Disconnected");
     }
     ui->actionSettings->setEnabled(true);
     disableOnlineFunctionality();
