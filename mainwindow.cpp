@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     console = new Console(this);
     rsSettings = new SettingsDialog(this); //settings dialog
     serial = new SerialPort{this};
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     interpreter = new Interpreter(console,this);
     setWindowIcon(QIcon(":/robot.png"));
     ui->setupUi(this);
+    //ui->actionOmmitUnknown->setChecked(true);
     setUIStyle();
     setupConsole();
     setupFileMenu();
@@ -369,6 +371,7 @@ void MainWindow::setupSettingsMenu()
     QMenu *settingsMenu = new QMenu(tr("&Settings"),this);
     menuBar()->addMenu(settingsMenu);
     settingsMenu->addAction(ui->actionSettings);
+    settingsMenu->addAction(ui->actionOmmitUnknown);
 }
 
 void MainWindow::setupHelpMenu()
@@ -401,6 +404,7 @@ void MainWindow::setupActions()
    QWidget::connect(interpreter,SIGNAL(controlCommandIssued(QString)),this->console,SLOT(clear(QString)));
    QWidget::connect(ui->actionRun,SIGNAL(triggered(bool)),this,SLOT(run()));
    QWidget::connect(ui->actionStop,SIGNAL(triggered()),this,SLOT(stop()));
+   QWidget::connect(ui->actionOmmitUnknown,SIGNAL(triggered(bool)),interpreter,SLOT(setOmmiting(bool)));
 }
 void MainWindow::openRecentFile()
 {

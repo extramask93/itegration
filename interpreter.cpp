@@ -9,13 +9,13 @@ Interpreter::Interpreter(IPrinter *console_,QObject *parent) : QObject(parent), 
 
 bool Interpreter::isCheckingOn()
 {
-    return checker.isOn();
+    return checker.isErrorCheckingOn();
 }
 
 void Interpreter::setCheckingOn(bool state)
 {
-    checker.setOn(state);
-    if(checker.isOn())
+    checker.setErrorCheckingOn(state);
+    if(checker.isErrorCheckingOn())
         checking=true;
     else
         checking=false;
@@ -30,7 +30,7 @@ void Interpreter::processCommand(QString command)
     }
     else
     {
-        Result result = checker.checkLine(command,1);
+        Result result = checker.checkLine(command);
         if(!result.errorCode)
         {
             auto commandByte = command.toLocal8Bit();
@@ -63,6 +63,11 @@ int Interpreter::processScript(QString fileName)
         else
             return 0;
     }
+}
+
+void Interpreter::setOmmiting(bool state)
+{
+    checker.ommitUnknown=state;
 }
 
 void Interpreter::toggleChecker()

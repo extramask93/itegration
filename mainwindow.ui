@@ -592,6 +592,17 @@
     <string>Stop</string>
    </property>
   </action>
+  <action name="actionOmmitUnknown">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>OmmitUnknown</string>
+   </property>
+   <property name="toolTip">
+    <string>Ommit unknown commands during syntax checking.</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
