@@ -1,0 +1,14 @@
+Moves the tip of hand to the specified position. (Linear interpolation)
+MS  <position number> [, [<O/C>]]
+<Position number> Specify the destination position number in integer value.
+1 <= position number <= 999
+<O/C> Specify open or close state of hand. (If omitted, the hand state of the position is valid.)
+O: Hand open
+C: Hand close
+10 SP 15 ; Sets speed to 15.
+20 MO 1 ; Moves to position 1 by joint interpolation.
+30 MS 5 ; Moves to position 5 by linear interpolation.
+40 MS 6 ; Moves to position 6 by linear interpolation.
+50 MS 7 ; Moves to position 7 by linear interpolation.
+60 MS 8 ; Moves to position 8 by linear interpolation.
+70 MS 5 ; Moves to position 5 by linear interpolation.

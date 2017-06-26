@@ -1,0 +1,15 @@
+WH (Where)
+Reads the coordinates of the current position and the open or close state of the hand. (Using RS-232C)
+
+WH
+
+6-axis type
+10 OPEN ” COM1:E83” AS #1 ; Opens the RS-232C communication file from the personal computer in
+BASIC.
+20 PRINT #1,” WH” ; Transmits the command "WH".
+40 LINE INPUT #1,A$ ; Saves the received data to A$.
+50 PRINT "Current coordinates are " : A $ ; Displays the contents of A$ on the screen.
+60 ED ; Ends.
+RUN ; Run the program.
+Current coordinates are +10.00, ; Displays the value of the current position.
++380.00,300.00,-70.00,50.00,+40.00, R, A, N, C

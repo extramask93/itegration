@@ -1,0 +1,17 @@
+SM (If Smaller)
+This compares the value of the internal register with a specified value. If smaller, the program will jump. The character
+string register and the numbers of characters in a specified character string are compared. If the character string
+register is smaller, the program will jump.
+
+SM   <compared value/character string number>, <branching line number>
+
+10 ID ; Fetches the data from the external input port.
+20 SM 10,100 ; If the input data is smaller than 10, jumps to line 100.
+30 MS 1 ; Moves to position 1 by linear interpolation.
+40 ED ; Ends program.
+100 MO 10 ; Moves to position 10.
+140 OPN 1,1 ; Opens the RS-232C port.
+150 INP 1, ,2 ; Reads the data of character string register from the RS-232C port.
+160 SM $5,200 ; Jumps to line 200 if the data smaller than character string number 10.
+ :
+200 MO 2 ; Moves to position 2.

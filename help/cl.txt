@@ -1,0 +1,11 @@
+CL (Counter Load)
+The internal register value is set in the counter with the specified number.
+The character string register details are set in the character string with the specified value 
+CL <counter number>
+10 ID ; Fetches data from external input port.
+20 CL 25 ; Sets above data to counter 25.
+30 CP 11 ; Sets data of counter 11 to internal register.
+40 CL 21 ; Sets data of internal register to counter 21.
+50 SC $5,"ABC" ; Set character string "ABC" in character string number 5
+60 CP $5 ; Set details of character string number 5 in the character string register
+70 CL $10 ; Set the details of the character string register in character string number 10

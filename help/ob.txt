@@ -1,0 +1,12 @@
+OB (Output Bit)
+The output state of the bit designated as the external output signal is set.
+OB  [<+/->] <Bit number>
+<+/-> Set ON or OFF state of the specified bit.
++ : Bit ON
+- : Bit OFF
+<Bit number> Specify the bit number of external output.
+0 =< bit number =< 32767
+
+10 OD &FFFF ; Turns the bits (0-15) of external output into ON entirely.
+20 OB -10 ; Turns only bit 10 to OFF.
+30 ED ; Ends program.

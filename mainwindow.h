@@ -18,6 +18,7 @@
 #include "serialport.h"
 #include "qasyncqueue.h"
 #include "senddialog.h"
+#include "helpdialog.h"
 #include <QDebug>
 #include <QListIterator>
 #include <QSettings>
@@ -59,6 +60,7 @@ private:
     void closeEvent(QCloseEvent *event) override;
     Ui::MainWindow *ui;
     SettingsDialog *rsSettings;
+    HelpDialog *helpdialog;
     Console *console;
     SerialPort *serial;
     QString currentFileName;

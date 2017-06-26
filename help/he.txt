@@ -1,0 +1,7 @@
+HE (Here)
+Defines the current coordinates as the specified position.
+HE <position number>
+10 MO 1 ; Moves to position 1. 
+20 HLT ; Stops 
+30 MO 2 ; Moves to position 2.
+40 ED ; Ends program.

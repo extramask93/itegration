@@ -1,0 +1,11 @@
+OVR (Override)
+Specify program override.
+OVR   <specified override>
+
+<Specified override> Specify override value. ( % )
+1 <= specified override <= 200
+
+10 SP 30 ; Sets working speed 30 (100 %).
+20 OVR 80 ; Sets override 80 %.
+3 MO 2 ; Moves to position 2.
+40 ED ; Ends program.

@@ -1,0 +1,12 @@
+SD (Speed Define)
+Defines the moving velocity, time constant, acceleration/deceleration time, and continuous path setting.
+SD  <moving speed> [, <time constant>
+[, <acceleration rate>, <deceleration rate> [, <CNT setting>]]]
+
+10 SP 15 ; Set the moving speed to 15.
+20 MS 1 ; Moves to position 1 by linear interpolation. (SP 15)
+30 SD 100 ; Set the moving speed to 100mm/sec.
+40 MS 2 ; Moves to position 2 by linear interpolation. (100 mm/sec)
+50 MO 3 ; Moves to position 3 by joint interpolation. (SP 15)
+60 MS 4 ; Moves to position 4 by linear interpolation. (100 mm/sec)
+70 ED ; Ends program.

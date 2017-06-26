@@ -1,0 +1,8 @@
+GO (Grip Open)
+Opens the grip of the hand.
+GO <hand number>
+10 MO 10,C ; Moves to position 10 with hand closed. 
+20 TI  5 ; Sets 0.5 second timer. 
+30 GO ; Opens hand to release workpiece. 
+40 TI 5 ; Sets 0.5 second timer. 
+50 MO 15,O ; Moves to position 15 with hand opened.

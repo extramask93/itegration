@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
 //global queue holds data to send
 constexpr const unsigned int sQ = 50;
 QAsyncQueue<QByteArray> queue{sQ};
@@ -14,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     rsSettings = new SettingsDialog(this); //settings dialog
     serial = new SerialPort{this};
     senddialog = new SendDialog{this};
+    helpdialog = new HelpDialog(this);
     interpreter = new Interpreter(console,this);
     setWindowIcon(QIcon(":/robot.png"));
     ui->setupUi(this);
@@ -378,6 +380,7 @@ void MainWindow::setupHelpMenu()
 {
     QMenu *helpMenu = new QMenu(tr("&Help"), this);
     menuBar()->addMenu(helpMenu);
+    helpMenu->addAction(tr("&Help"),helpdialog,SLOT(show()));
     helpMenu->addAction(tr("&About"), this, SLOT(about()));
 }
 void MainWindow::inform()

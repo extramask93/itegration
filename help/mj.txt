@@ -1,0 +1,6 @@
+MJ (Move Joint)
+input format for 4dof
+MJ    [ J1 ] [ , [ J2 ] [ , [ J3 ] [ , [ J4 ] [ , [ J7] [ , [ J8 ] ] ] ] ] ]
+10 MJ 90,0,0,0 ; Turns the J1-axis + 90 degrees. 
+20 MJ 0,0,0,20 ; Turns the J4-axis + 20 degrees. 
+30 MJ 0,0,0,0,10,20 ; Moves the J7-axis (additional axis 1) + 10 mm, the J8-axis (additional axis 2) + 20 mm.

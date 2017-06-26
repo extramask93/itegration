@@ -1,0 +1,10 @@
+CP (Compare Counter)
+The value of the specified counter is set in the internal register. The details of the specified character string are set 
+in the character string register.
+CP <counter number>
+100 IC 21 ; Add 1 to the contents of counter 21 
+110 CP 21 ; Sets the value of counter 21 to the internal register. 
+120 EQ 255,500 ; If the contents of the internal register equal 255, the program jumps to line number 500. 
+130 GT 100 ; The program jumps to line number 100. 500 SC 21,0 ; Sets value 0 to counter 21. 
+600 SC $5,"OK" ; Set character string "OK" in character string number 5 610 CP $5 ; Set details of character string number 5 in the character string register 
+620 EQ $10,800 ; If the contents of the character string register equal  character string number 10, the program jumps to line number 800. 

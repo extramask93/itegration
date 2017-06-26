@@ -1,0 +1,7 @@
+GS (Go Sub)
+Carries out subroutine beginning with the specified line number.
+GS <line number>,<program name>
+10 GS 100 ; Carry out subroutine beginning with line number 100. 
+90 ED ; Ends program.
+100 MO 11 ; Moves to position 11.
+130 RT ; Ends subroutin 

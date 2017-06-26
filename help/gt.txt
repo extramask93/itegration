@@ -1,0 +1,5 @@
+GT (Go To)
+Jumps to the specified line number unconditionally.
+GT <line number>
+10 MO 1 ; Moves to position 1. 
+20 GT 100 ; Jumps to line 100 unconditionally.

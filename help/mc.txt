@@ -1,0 +1,6 @@
+MC (Move Continuous)
+Moves the robot continuously through the predefined intermediate points between two specified position numbers. (Linear interpolation)
+MC <position number>, <position number2>
+10 SP 10 ; Sets speed to 10. 
+20 MO 1 ; Moves to position 1 in joint interpolation. 
+30 MC 5,9 ; Moves continuously from position 5 to 9 in linear interpolation.

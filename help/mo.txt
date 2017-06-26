@@ -1,0 +1,6 @@
+MO (Move)
+Moves the hand tip to the specified position. (Joint interpolation)
+MO <position number>
+10 SP 10 ; Sets speed to 10. 
+20 MO 20,C ; Moves to position 20 with hand closed. 
+30 MO 30,O ; Moves to position 30 with hand opened.

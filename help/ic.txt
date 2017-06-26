@@ -1,0 +1,8 @@
+IP (Increment Position)
+Moves the robot to a predefined position with a position number greater than the current one. (Joint interpolation)
+
+10 MO 5 ; Moves to position 5. 
+20 MO 4 ; Moves to position 4. 
+30 MO 3 ; Moves to position 3. 
+40 IP ; Moves to position 4. 
+50 IP ; Moves to position 5.

@@ -1,0 +1,11 @@
+EQ (Equal)
+This compares the value of the internal register with a specified value. If they are the same, the program will jump to                     the specified line number. The character string register and the details of the specified character string are compared,                 and if the values are the same, the program will jump to the specified line number.
+100 ID ; Fetches data from external input port. 
+EQ <compering value>,<Branching Line number>
+110 EQ 100,130 ; Jumps to line 
+130 if the data equals 100. 
+120 ED ; Ends the program if above condition is not met. 
+130 SC $5,"OK" ; Set character string "OK" in character string number 5 
+140 CP $5 ; Set details of character string number 5 in the character string register 
+150 EQ  $10,200 ; Jumps to line 200 if the data equals character string number 10.  : 
+200 MO 7 ; Moves to  position 7.

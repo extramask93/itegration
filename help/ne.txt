@@ -1,0 +1,14 @@
+NE (If Not Equal)
+This compares the value of the internal register with a specified value. If not equal, the program will jump. The character
+string register and details of a specified character string are compared. If not equal, the program will jump.
+NE   <compared value/character string number>, <branching line number>
+
+10 ID ; Fetches data from external input port.
+20 NE 80,100 ; Jumps to line 100 if the data does not equal 80.
+30 ED ; Ends the program if above condition is not met.
+100 MO 7 ; Moves to position 7.
+110 OPN 1,1 ; Opens the RS-232C port.
+120 INP 1, ,2 ; Reads the data of character string register from the RS-232C port.
+130 NE $2,200 ; Jumps to line 200 if the data not equals character string number 2.
+ :
+200 ED ; Ends program.

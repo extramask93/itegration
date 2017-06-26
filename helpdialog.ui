@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HelpDialog</class>
+ <widget class="QDialog" name="HelpDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>780</width>
+    <height>499</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Help</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Search</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLineEdit" name="lineEdit"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>Search</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>548</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>28</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QListWidget" name="listWidget">
+         <item>
+          <property name="text">
+           <string>How to use apllication</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>CL</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>CP</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>CR</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DS</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DC</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>EQ</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>GC</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>GO</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>GS</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>GT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>HE</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>IP</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>LG</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>MC</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>MJ</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>MO</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>MRA</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>MS</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>NE</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>OB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>OVR</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PD</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>RC</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>RT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>SC</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>SD</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>SM</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>TBD</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>TI</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>WH</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTextEdit" name="textEdit"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+  <zorder>label</zorder>
+  <zorder>lineEdit</zorder>
+  <zorder>listWidget</zorder>
+  <zorder>textEdit</zorder>
+  <zorder>pushButton</zorder>
+  <zorder>verticalSpacer</zorder>
+  <zorder>horizontalSpacer</zorder>
+  <zorder>verticalSpacer</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

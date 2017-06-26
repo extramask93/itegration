@@ -60,35 +60,5 @@
         <file>rc/dictionary.png</file>
         <file>rc/dictionary_off.png</file>
         <file>rc/stop.png</file>
-		<file>help/cl.txt</file> 
-		<file>help/ds.txt</file>
-		<file>help/gs.txt</file>
-		<file>help/lg.txt</file>
-		<file>help/mra.txt</file>
-		<file>help/ovr.txt</file>
-		<file>help/rt.txt</file>
-		<file>help/tbd.txt</file>
-		<file>help/cp.txt</file>
-		<file>help/eq.txt</file>
-		<file>help/gt.txt</file>
-		<file>help/mc.txt</file>
-		<file>help/ms.txt</file>
-		<file>help/pd.txt</file>
-		<file>help/sc.txt</file>
-		<file>help/ti.txt</file>
-		<file>help/cr.txt</file>
-		<file>help/gc.txt</file>
-		<file>help/he.txt</file>
-		<file>help/mj.txt</file>
-		<file>help/ne.txt</file>
-		<file>help/rc.txt</file>
-		<file>help/sd.txt</file>
-		<file>help/wh.txt</file>
-		<file>help/dc.txt</file>
-		<file>help/go.txt</file>
-		<file>help/ic.txt</file>
-		<file>help/mo.txt</file>
-		<file>help/ob.txt</file>
-		<file>help/sm.txt</file>
     </qresource>
 </RCC>

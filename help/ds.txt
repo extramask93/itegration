@@ -1,0 +1,6 @@
+DS (Draw Straight)
+Moves the end of the hand to a position away from the current position by the distance specified in X,Y and Z directions. (Linear interpolation)
+10 DS 100,0,0 ; Moves to X axis direction by 100 mm. 
+20 DS 0,100,0 ; Moves to Y axis direction by 100 mm. 
+30 DS -100,0,0 ; Moves to X axis direction by -100 mm. 
+40 DS 0,-100,0 ; Moves to Y axis direction by -100 mm.

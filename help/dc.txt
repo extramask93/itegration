@@ -1,0 +1,5 @@
+DC (Decreement counter)
+Subtracts 1 from the value in the specified counter.
+DC <counter number>
+10 SC 21,15 ;Sets value 15 to the counter 21. 
+20 DC 21 ;Subtracts 1 from the value in the counter 21.

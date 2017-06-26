@@ -1,0 +1,9 @@
+TBD (Test Bit Dirct)
+Causes a jump to occur in accordance with the specified bit value in the external input.
+TBD   [<+/->] <input bit number>, <branching line number>
+
+10 TBD +19,100 ; If the bit 19 of the external input is ON, then jumps to line number 100.
+20 MS 1 ; Moves to position 1 by linear interpolation.
+30 ED ; Ends program.
+ :
+100 MO 10 ; Moves to position 10.

@@ -1,0 +1,9 @@
+LG (If Larger)
+This compares the value of the internal register with a specified value. If larger, the program will jump. The character string register and the numbers of characters in a specified character string are compared. If the character string register is larger, the program will jump.
+LG <compered value>,<branching line number>
+100 ID ; Fetches the data from the external input port. 
+110 LG 100,130 ; If the input data is larger than 100, jumps to line 130. 
+120 ED ; Else program ends. 130 MO 1 ; Moves to position 1. 
+140 OPN 1,1 ; Opens the RS-232C port. 
+150 INP   1, ,2 ; Reads the data of character string register from the RS-232C port. 
+160 LG   $5,200 ; Jumps to line 200 if the data length large than character string number 5. 

@@ -1,0 +1,10 @@
+SC (Set Counter)
+A specified value is set in the specified counter or character string.
+SC   <counter number/character string number>, [<counter set value/character string set value>]
+10 SC   21,10 ; Set value 10 to counter 21.
+20 IC   21 ; Add 1 to counter 21.
+30 CP   21 ; Set value of counter 21 to the internal register.
+40 DR      ; Outputs the value of the internal register through RS-232C port.
+50 SC   $5,"OK" ; Set character string "OK" in character string number 5
+60 CP   $5 ; Set details of character string number 5 in the character string register
+70 EQ   $10,200 ; Jumps to line 200 if the data equals character string number 10.

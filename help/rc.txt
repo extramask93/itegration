@@ -1,0 +1,11 @@
+RC (Repeat Cycle)
+Repeats the loop specified by the NX command the specified number of times.
+RC  <number of repeated cycles>
+10 MO 1 ; Moves to position 1.
+20 RC 3 ; Repeats loop delimited by NX three times
+30 MO 2 ; Moves to position 2.
+40 MO 3 ; Moves to position 3.
+50 MO 4 ; Moves to position 4.
+60 NX ; Delimits the loop.
+70 MO 5 ; Moves to position 5.
+80 ED ; Ends program.

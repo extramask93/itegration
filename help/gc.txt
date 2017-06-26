@@ -1,0 +1,8 @@
+GC (Grip Close)
+Close the grip of hand.
+GC <hand number>
+10 MO 10,O ; Moves to  position 10 with hand opened. 
+20 TI 5 ; Sets 0.5 second timer. 
+30 GC ; Closes hand to grasp workpiece. 
+40 TI 5 ; Sets 0.5 second timer. 
+50 MO 15,C ; Moves to position 15 with hand closed.

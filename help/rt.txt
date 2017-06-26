@@ -1,0 +1,7 @@
+RS * (Reset)
+Resets the program and error condition.
+RS   [<reset number>]
+10 OPEN ” COM1;E83 AS #1 ; Opens the RS-232C communication file from personal computer in BASIC.
+20 PRINT #1,” MO 1000” ; Error occurs because of the wrong value.
+30 PRINT #1,” RS” ; Cancels the error.
+40 ED ; Ends program.

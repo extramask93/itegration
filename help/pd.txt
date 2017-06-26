@@ -1,0 +1,34 @@
+PD (Position Define)
+Defines the coordinates (location and angle) of the specified position
+(1)6-axis type
+PD  <Position number>,[[ X ] [, [ Y ] [, [ Z ] [, [A] [, [B] [, [C] [, [ L1 ] [, [ L2 ]
+[, [<R/L>] [, [<A/B>] [, [<N/ F >] ] ] ] ] ] ] ] ] ] ] ] [, <O/C>]
+(2)5-axis type
+PD  <Position number>, [[ X ] [, [ Y ] [, [ Z ] [, [A] [, [B] [,, [ L1 ] [, [ L2 ]
+[, [<R/ L>] [, [<A/B>] ] ] ] ] ] ] ] ] ] [, <O/C>]
+(3)4-axis type
+PD  <Position number>, [[ X ] [, [ Y ] [, [ Z ] [,,, [C] [, [ L 1 ] [, [ L 2 ]
+[, [<R/L >] ] ] ] ] ] ] ] [, <O/C>]
+
+(1)6-axis type
+10 PD 10,50,320,70,50,40,30,R,A,N,O ; Defines the location and angle of position 10. (X=50, Y=320, Z=70, A=50,
+B=40, C=30, Right, Above, Nonflip, Hand1 open)
+40 MO 10 ; Moves to position 10.
+50 ED ; Ends program.
+(2)5-axis type
+10 PD 10,50,320,70,40,30,R,A,O ; Defines the location and angle of position 10. (X=50, Y=320, Z=70, A=40,
+B=30, Right, Above, Hand1 open)
+20 PD 11,50,320,70,40,30,,10,R,A,O ; Defines the location and angle of position 11. (X=50, Y=320, Z=70, A=40,
+B=30, L1=10, Right, Above, Hand1 open)
+30 MO 10 ; Moves to position 10.
+40 MO 11 ; Moves to position 11.
+50 ED ; Ends program.
+(3)4-axis type
+ 10 PD 10,50,320,70,,,30,R,O ; Defines the location and angle of position 10. (X=50, Y=320, Z=70, C=30,
+Right, Hand1 open)
+ PL (Position Road) 2-63
+ 20 PD 11,50,320,70,,,30,20,25,R,O ; Defines the location and angle of position 11. (X=50, Y=320, Z=70, C=30,
+L1=20, L2=25, Right, Hand1 open)
+ 30 MO 10 ; Moves to position 10.
+ 40 MO 11 ; Moves to positio
+ 

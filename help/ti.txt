@@ -1,0 +1,10 @@
+TI (Timer)
+Halts the motion for the specified length of time.
+TI   <timer counter>
+
+10 MO 1,O ; Moves to position 1.
+20 TI 5 ; Wait for 0.5 second.
+30 GC ; Closes hand.
+40 TI 10 ; Wait for 1.0 second.
+50 MO 2 ; Moves to position 2.
+60 ED ; Ends program.

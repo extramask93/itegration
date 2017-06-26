@@ -1,0 +1,16 @@
+MRA (Move RA)
+Moves to the specified position in circular interpolation.
+MRA <position number> [, [<O/C>]]
+<Position number> Specify the destination position.
+1 <= position number <= 999
+<O/C> Specify open or close state of the hand. 
+(If omitted, the hand state of the position is valid.)
+O: Hand open
+C: Hand close
+10 MRA 1,O ; Defines the arc with positions 1, 2, 3. Moves to position 1 by linear interpolation.
+20 MRA 2,O ; Moves to position 2 by circular interpolation.
+30 MRA 3,C ; Moves to position 3 by circular interpolation.
+40 TI 3 ; Timer 0.3 second.
+50 MRA 4 ; Moves to position 4 by circular interpolation.
+60 MRA 5 ; Moves to position 5 by circular interpolation.
+70 ED ; Ends program.

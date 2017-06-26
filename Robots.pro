@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     iprinter.cpp \
     bauddialog.cpp \
     senddialog.cpp \
-    logger.cpp
+    logger.cpp \
+    helpdialog.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -53,13 +54,15 @@ HEADERS  += mainwindow.h \
     qasyncqueue.h \
     bauddialog.h \
     senddialog.h \
-    logger.h
+    logger.h \
+    helpdialog.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \
     console.ui \
     bauddialog.ui \
-    senddialog.ui
+    senddialog.ui \
+    helpdialog.ui
 QT += serialport
 QT +=gui
 RESOURCES += style.qrc

@@ -1,0 +1,11 @@
+CR (Counter Read)
+The details of the specified counter or character string are read out. (Using RS-232-C)
+CR <counter number>
+10 OPEN” COM1;E83” AS #1 ; Opens the RS-232C communication file by the BASIC. 
+20 INPUT "Counter number";N ; Enter the counter number. 
+30 INPUT "Counter data "; D ; Enter the counter data. 
+40 PRINT #1, "SC "+STR$(N)+","+STR$(D) ; Specified data is input into the counter. 
+50 PRINT #1,"CR"+STR$(N ; Transfers the data to the personal computer. 
+60 LINE INPUT #1,A$ ; Saves the received data to A$. 
+70 PRINT  A$ ; Displays the data to the screen. 
+80 ED ; Program ends.
