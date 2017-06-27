@@ -236,6 +236,26 @@ void Console::setPrefixColor(const QColor&color)
 {
     prefixColor=color;
 }
+void Console::saveSession()
+{
+    QString filter{"Text Files (*.txt)"};
+    QString fName=QFileDialog::getSaveFileName(this,tr("Save file"),"",filter,&filter);
+    if(fName.isEmpty())
+        return;
+    else
+        logger->saveSession(fName);
+}
+void Console::loadSession()
+{
+    QString filter{"Text Files (*.txt)"};
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", filter,&filter);
+    if(fileName.isEmpty())
+        return;
+    QStringList list=logger->loadSession(fileName);
+    foreach (auto line, list) {
+        print(line);
+    }
+}
 
 void Console::processCommand()
 {

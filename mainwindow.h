@@ -18,6 +18,7 @@
 #include "serialport.h"
 #include "qasyncqueue.h"
 #include "senddialog.h"
+#include "script.h"
 #include "helpdialog.h"
 #include <QDebug>
 #include <QListIterator>

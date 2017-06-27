@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     bauddialog.cpp \
     senddialog.cpp \
     logger.cpp \
-    helpdialog.cpp
+    helpdialog.cpp \
+    script.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -55,7 +56,8 @@ HEADERS  += mainwindow.h \
     bauddialog.h \
     senddialog.h \
     logger.h \
-    helpdialog.h
+    helpdialog.h \
+    script.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \

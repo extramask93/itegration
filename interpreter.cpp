@@ -2,9 +2,14 @@
 #include "qasyncqueue.h"
 #include <QDebug>
 extern QAsyncQueue<QByteArray> queue;
-Interpreter::Interpreter(IPrinter *console_,QObject *parent) : QObject(parent), checker()
+Interpreter::Interpreter(IPrinter *console_,SerialPort *serial_,QObject *parent) : QObject(parent), checker()
 {
     console=console_;
+    serial=serial_;
+}
+
+Interpreter::~Interpreter()
+{
 }
 
 bool Interpreter::isCheckingOn()
@@ -34,11 +39,11 @@ void Interpreter::processCommand(QString command)
         if(!result.errorCode)
         {
             auto commandByte = command.toLocal8Bit();
-            queue.push(commandByte.append('\r'));
+            serial->writeS(commandByte.append('\r'));
         }
         else
         {
-            console->printError(result.errorString);
+            emit errorOccured(result.errorString);
         }
     }
 }
@@ -46,7 +51,7 @@ int Interpreter::processScript(QString fileName)
 {
     if(checker.checkFile(fileName))
     {
-        console->printError("Cannot open the file: "+fileName);
+        emit errorOccured("Cannot open the file: "+fileName);
         return 1;
     }
     else
@@ -55,10 +60,10 @@ int Interpreter::processScript(QString fileName)
             return 0;
         foreach(auto result,checker.errorlist)
         {
-            console->printError("Line "+QString::number(result.lineNr)+": "+result.errorString);
+            emit errorOccured("Line "+QString::number(result.lineNr)+": "+result.errorString);
 
         }
-        if(!checker.errorlist.empty())
+        if(!checker.errorlist.isEmpty())
             return 1;
         else
             return 0;

@@ -6,6 +6,7 @@
 #include "interpreter.h"
 #include "iprinter.h"
 #include "logger.h"
+#include <QFileDialog>
 
 namespace Ui {
 class Console;
@@ -46,6 +47,8 @@ public slots:
     void prepareCommandLine();
     void clear(QString command);
     void printSerial(QByteArray message);
+    void saveSession();
+    void loadSession();
 protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;

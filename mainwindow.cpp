@@ -1,26 +1,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-
-//global queue holds data to send
-constexpr const unsigned int sQ = 50;
-QAsyncQueue<QByteArray> queue{sQ};
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
-    //console = new Console(this);
-    rsSettings = new SettingsDialog(this); //settings dialog
+    rsSettings = new SettingsDialog(this);
     serial = new SerialPort{this};
     senddialog = new SendDialog{this};
     helpdialog = new HelpDialog(this);
-    interpreter = new Interpreter(ui->console,this);
+    interpreter = new Interpreter(ui->console,serial,this);
     setWindowIcon(QIcon(":/robot.png"));
     ui->setupUi(this);
     ui->centralWidget->hide();
-    //ui->actionOmmitUnknown->setChecked(true);
     setUIStyle();
     setupConsole();
     setupFileMenu();
@@ -38,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     disableOnlineFunctionality(true);
     connect(this,SIGNAL(lineSent(int,int,int)),senddialog,SLOT(updateProgressBar(int,int,int)));
     connect(serial,SIGNAL(messageArrived(QByteArray)),ui->console,SLOT(printSerial(QByteArray)));
+    connect(interpreter,SIGNAL(errorOccured(QString)),ui->console,SLOT(print(QString)));
     connect(serial,SIGNAL(writeTimeOut()),this,SLOT(inform()));
 }
 
@@ -182,8 +175,8 @@ void MainWindow::run()
     nameWithExtension.chop(lengthOfExtension);
     QString command = tr("N\"%1\"\r").arg(nameWithExtension);
     QByteArray array = command.toLocal8Bit();
-    queue.push(array);
-    queue.push("RN\r");
+    serial->writeS(array);
+    serial->writeS("RN\r");
     ui->statusBar->showMessage("Running");
 }
 
@@ -223,6 +216,8 @@ void MainWindow::disableOnlineFunctionality(bool state)
 
 bool MainWindow::okToContinue()
 {
+    if(currentFileName.isEmpty() && (ui->editor->toPlainText().isEmpty()))
+        return true;
     if(ui->editor->isWindowModified())
     {
         QMessageBox::StandardButton response = QMessageBox::warning(this,tr("Save the file?"),tr("File has been modified. Do you want to save changes?"),QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
@@ -238,7 +233,6 @@ void MainWindow::setupConsole()
 {
     ui->console->setEnabled(true);
     QWidget::connect(ui->console,SIGNAL(commandIssued(QString)),interpreter,SLOT(processCommand(QString)));
-    //QWidget::connect(interpreter,SIGNAL(robotCommandIssued(QByteArray)),serial,SLOT(writeS(QByteArray)));
 }
 
 
@@ -262,7 +256,6 @@ bool MainWindow::save()
         return saveFile(currentFileName);
     }
 }
-
 bool MainWindow::saveAs()
 {
     QString filter{"Move Master Command (*.mmc);; Text Files (*.txt)"};
@@ -287,10 +280,11 @@ void MainWindow::print()
     {
         QFile file{fName};
         file.open(QIODevice::WriteOnly|QIODevice::Text);
-        Numberer numb;
         QStringList lines;
         try{
-        lines=numb.number(currentFileName,'\n');}
+            Script script{currentFileName};
+            lines=script.number().addLineBreaks().getContent();
+        }
         catch(std::exception &ex)
         {
             QMessageBox::warning(nullptr,"Print error",ex.what(),QMessageBox::Ok);
@@ -332,17 +326,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(serial->isOpen())
         serial->close();
-    if(currentFileName.isEmpty() && (ui->editor->toPlainText().isEmpty()))
-        event->accept();
-    else
+    if(okToContinue())
     {
-        if(okToContinue())
-        {
-            event->accept();
-        }
-        else
-            event->ignore();
+        event->accept();
     }
+    else
+        event->ignore();
 }
 
 void MainWindow::setupEditMenu()
@@ -370,6 +359,8 @@ void MainWindow::setupSessionMenu()
 {
     QMenu *sessionMenu= new QMenu(tr("Session"),this);
     menuBar()->addMenu(sessionMenu);
+    sessionMenu->addAction(ui->actionExport_Session);
+    sessionMenu->addAction(ui->actionImport_Session);
 }
 void MainWindow::setupSettingsMenu()
 {
@@ -385,10 +376,6 @@ void MainWindow::setupHelpMenu()
     menuBar()->addMenu(helpMenu);
     helpMenu->addAction(tr("&Help"),helpdialog,SLOT(show()));
     helpMenu->addAction(tr("&About"), this, SLOT(about()));
-}
-void MainWindow::inform()
-{
-    QMessageBox::warning(this,"Error","write timeout, please try again",QMessageBox::Ok);
 }
 void MainWindow::setupWindowMenu()
 {
@@ -411,6 +398,8 @@ void MainWindow::setupActions()
    QWidget::connect(ui->actionRun,SIGNAL(triggered(bool)),this,SLOT(run()));
    QWidget::connect(ui->actionStop,SIGNAL(triggered()),this,SLOT(stop()));
    QWidget::connect(ui->actionOmmitUnknown,SIGNAL(triggered(bool)),interpreter,SLOT(setOmmiting(bool)));
+   QWidget::connect(ui->actionExport_Session,SIGNAL(triggered(bool)),ui->console,SLOT(saveSession()));
+   QWidget::connect(ui->actionImport_Session,SIGNAL(triggered(bool)),ui->console,SLOT(loadSession()));
 }
 void MainWindow::openRecentFile()
 {
@@ -424,18 +413,19 @@ void MainWindow::openRecentFile()
 
 int MainWindow::compile()
 {
+    bool isError=false;
     if(okToContinue())
     {
         try
         {
-            interpreter->processScript(currentFileName);
+            isError=interpreter->processScript(currentFileName);
+            return isError;
         }
         catch(std::runtime_error &ex)
         {
             QMessageBox::critical(this,"Syntax check Error!",ex.what(),QMessageBox::Ok);
             return 1;
         }
-        ui->console->printMessage("Syntax Ok");
         return 0;
     }
     else
@@ -454,24 +444,8 @@ void MainWindow::trySend()
         QMessageBox::critical(this,"Connection Error!","Serial connection not established",QMessageBox::Ok);
         return;
     }
-    Numberer numberer;
-    QStringList commands=numberer.number(currentFileName);
-    int max=commands.size();
-    int min=0;
-    int current=0;
-    QList<QByteArray> cmds;
-    senddialog->show();
-    foreach (QString l, commands) {
-       serial->writeS(l.toLocal8Bit());
-       senddialog->updateProgressBar(max,min,current);
-       current++;
-       QThread::msleep(300);
-       qApp->processEvents();
-    }
-    senddialog->updateProgressBar(max,min,max);
-    senddialog->hide();
-    //queue.pushMany(cmds.begin(),cmds.end());
-    ui->console->printMessage("File sent");
+    Script currentScript{currentFileName};
+    serial->writeFile(currentScript);
 
 }
 void MainWindow::checkState()
@@ -535,4 +509,8 @@ void MainWindow::on_actionSettings_triggered()
 void MainWindow::about()
 {
 
+}
+void MainWindow::inform()
+{
+    QMessageBox::warning(this,"Error","write timeout, please try again",QMessageBox::Ok);
 }

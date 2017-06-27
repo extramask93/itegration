@@ -22,6 +22,7 @@ QStringList Logger::loadSession(QString fileName)
     while(!in.atEnd())
     {
         in>>buffer;
+        buffer.trimmed();
         list.append(buffer);
     }
     while(list.size()>maxNrOfLogEntries)

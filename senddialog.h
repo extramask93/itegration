@@ -16,8 +16,12 @@ public:
     ~SendDialog();
 public slots:
     void updateProgressBar(int max,int min,int current);
+private slots:
+    void cancelSending();
 private:
     Ui::SendDialog *ui;
+signals:
+    void cancelButtonClicked();
 };
 
 #endif // SENDDIALOG_H

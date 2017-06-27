@@ -617,6 +617,22 @@
     <string>Ommit unknown commands during syntax checking.</string>
    </property>
   </action>
+  <action name="actionExport_Session">
+   <property name="text">
+    <string>Export Session</string>
+   </property>
+   <property name="toolTip">
+    <string>Export current session to a file</string>
+   </property>
+  </action>
+  <action name="actionImport_Session">
+   <property name="text">
+    <string>Import Session</string>
+   </property>
+   <property name="toolTip">
+    <string>Imports session from a file</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
