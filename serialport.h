@@ -7,6 +7,7 @@
 #include "numberer.h"
 #include "script.h"
 #include <QObject>
+#include <QMessageBox>
 #include <QThread>
 
 class SerialPort : public QThread
@@ -27,8 +28,10 @@ public slots:
     void read();
     int writeFile(Script script);
     void cancelSending();
+    void handleError(QSerialPort::SerialPortError error);
 signals:
     void writeTimeOut();
+    void portClosed();
     void messageArrived(QByteArray message);
 };
 

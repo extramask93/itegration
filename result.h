@@ -6,8 +6,8 @@ class Result
 {
 public:
     Result();
-    Result(unsigned int, unsigned int, QString);
-    unsigned int errorCode;
+    Result(bool, unsigned int, QString);
+    bool isError;
     unsigned int lineNr;
     QString errorString;
 };

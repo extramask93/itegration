@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     senddialog.cpp \
     logger.cpp \
     helpdialog.cpp \
-    script.cpp
+    script.cpp \
+    badnameexception.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -57,7 +58,8 @@ HEADERS  += mainwindow.h \
     senddialog.h \
     logger.h \
     helpdialog.h \
-    script.h
+    script.h \
+    badnameexception.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \
@@ -68,3 +70,4 @@ FORMS    += mainwindow.ui \
 QT += serialport
 QT +=gui
 RESOURCES += style.qrc
+

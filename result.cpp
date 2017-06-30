@@ -4,4 +4,4 @@ Result::Result()
 {
     Result(0,0,"");
 }
-Result::Result(unsigned int code, unsigned int line, QString string): errorCode{code}, lineNr{line}, errorString{string}{}
+Result::Result(bool code, unsigned int line, QString string): isError{code}, lineNr{line}, errorString{string}{}

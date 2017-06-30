@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(serial,SIGNAL(messageArrived(QByteArray)),ui->console,SLOT(printSerial(QByteArray)));
     connect(interpreter,SIGNAL(errorOccured(QString)),ui->console,SLOT(print(QString)));
     connect(serial,SIGNAL(writeTimeOut()),this,SLOT(inform()));
+    connect(serial,SIGNAL(portClosed()),this,SLOT(closeSerialPort()));
 }
 
 
@@ -170,12 +171,10 @@ void MainWindow::run()
         return;
     if(currentFileName.isEmpty())
         return;
-    const int lengthOfExtension=4;
-    QString nameWithExtension= strippedName(currentFileName);
-    nameWithExtension.chop(lengthOfExtension);
-    QString command = tr("N\"%1\"\r").arg(nameWithExtension);
-    QByteArray array = command.toLocal8Bit();
-    serial->writeS(array);
+    QString name;
+    Script script(currentFileName);
+    name=script.getComplaintName();
+    serial->writeS("N \""+name.toLocal8Bit()+"\"\r");
     serial->writeS("RN\r");
     ui->statusBar->showMessage("Running");
 }
@@ -216,8 +215,8 @@ void MainWindow::disableOnlineFunctionality(bool state)
 
 bool MainWindow::okToContinue()
 {
-    if(currentFileName.isEmpty() && (ui->editor->toPlainText().isEmpty()))
-        return true;
+    //if(currentFileName.isEmpty() && (ui->editor->toPlainText().isEmpty()))
+      //  return true;
     if(ui->editor->isWindowModified())
     {
         QMessageBox::StandardButton response = QMessageBox::warning(this,tr("Save the file?"),tr("File has been modified. Do you want to save changes?"),QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
@@ -348,11 +347,11 @@ void MainWindow::setupToolsMenu()
 {
     QMenu *toolsMenu = new QMenu(tr("&Tools"),this);
     menuBar()->addMenu(toolsMenu);
-    toolsMenu->addAction(tr("&Connect"),this, SLOT(checkState()),QKeySequence("F3"));
-    toolsMenu->addAction(tr("&Send"),this, SLOT(trySend()),QKeySequence("F5"));
-    toolsMenu->addAction(tr("&Run"),this,SLOT(run()));
-    toolsMenu->addAction(tr("&Stop"),this,SLOT(stop()));
-    toolsMenu->addAction(tr("&Check Syntax"),this, SLOT(),QKeySequence("F4"));
+    toolsMenu->addAction(ui->actionConnect);
+    toolsMenu->addAction(ui->actionSend);
+    toolsMenu->addAction(ui->actionRun);
+    toolsMenu->addAction(ui->actionStop);
+    toolsMenu->addAction(ui->actionCheckSyntax);
 }
 
 void MainWindow::setupSessionMenu()
@@ -414,11 +413,11 @@ void MainWindow::openRecentFile()
 int MainWindow::compile()
 {
     bool isError=false;
-    if(okToContinue())
+    if(okToContinue() && !currentFileName.isEmpty())
     {
         try
         {
-            isError=interpreter->processScript(currentFileName);
+            isError=interpreter->processScript(Script(currentFileName));
             return isError;
         }
         catch(std::runtime_error &ex)
@@ -445,7 +444,9 @@ void MainWindow::trySend()
         return;
     }
     Script currentScript{currentFileName};
+    disableOnlineFunctionality(true);
     serial->writeFile(currentScript);
+    disableOnlineFunctionality(false);
 
 }
 void MainWindow::checkState()
@@ -468,9 +469,6 @@ void MainWindow::openSerialPort()
         disableOnlineFunctionality(false);
 
     }
-    else{
-        QMessageBox::critical(this,tr("Connection Error"),serial->port.errorString()+serial->port.error());
-    }
 }
 
 void MainWindow::closeSerialPort()
@@ -482,7 +480,6 @@ void MainWindow::closeSerialPort()
     }
     ui->actionSettings->setEnabled(true);
     disableOnlineFunctionality();
-    serial->terminate();
 }
 
 void MainWindow::setUIStyle()

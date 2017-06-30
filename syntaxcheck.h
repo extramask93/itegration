@@ -5,10 +5,12 @@
 #include <QRegExp>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonArray>
 #include <QHash>
 #include <QMessageBox>
 #include <exception>
 #include "result.h"
+#include "script.h"
 
 class SyntaxCheck : public QObject
 {
@@ -16,7 +18,7 @@ class SyntaxCheck : public QObject
 public:
     explicit SyntaxCheck(QObject *parent = 0);
     Result checkLine(QString line);
-    int checkFile(QString filename);
+    QList<Result> checkFile(Script script);
     bool loadDatabase();
     bool isOmmintingEnabled();
     QList<Result> errorlist;
@@ -29,7 +31,7 @@ private:
     QString getCommandName(QString line);
     bool isCommandFormat(QString line);
     QJsonDocument jsonDoc;
-    QHash<QString,QString> database;
+    QHash<QString,QStringList> database;
     bool isOn;
 
 
@@ -39,7 +41,6 @@ private:
     QRegExp createRegExp(QString pattern);
     bool hasMatch(QString line, QRegExp &regexp);
     bool isFullCommandFormat(QString line, QString command);
-    QStringList readScript(QString filename);
     bool isAComment(QString line);
     Result checkAgainstDatabase(QString commandName);
     bool isAControllCommand(QString line);

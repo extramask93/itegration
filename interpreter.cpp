@@ -36,7 +36,7 @@ void Interpreter::processCommand(QString command)
     else
     {
         Result result = checker.checkLine(command);
-        if(!result.errorCode)
+        if(!result.isError)
         {
             auto commandByte = command.toLocal8Bit();
             serial->writeS(commandByte.append('\r'));
@@ -47,26 +47,22 @@ void Interpreter::processCommand(QString command)
         }
     }
 }
-int Interpreter::processScript(QString fileName)
+int Interpreter::processScript(Script script)
 {
-    if(checker.checkFile(fileName))
+
+    if(!isCheckingOn())
+        return 0;
+    foreach(auto result,checker.checkFile(script))
     {
-        emit errorOccured("Cannot open the file: "+fileName);
-        return 1;
+        emit errorOccured("Line "+QString::number(result.lineNr)+": "+result.errorString);
+
     }
+    if(!checker.errorlist.isEmpty())
+        return 1;
     else
     {
-        if(!isCheckingOn())
-            return 0;
-        foreach(auto result,checker.errorlist)
-        {
-            emit errorOccured("Line "+QString::number(result.lineNr)+": "+result.errorString);
-
-        }
-        if(!checker.errorlist.isEmpty())
-            return 1;
-        else
-            return 0;
+        //console->printMessage("Syntax ok");
+        return 0;
     }
 }
 

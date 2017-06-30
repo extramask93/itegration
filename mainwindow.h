@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <tuple>
 #include "settingsdialog.h"
+#include "badnameexception.h"
 #include "console.h"
 #include "highlighter.h"
 #include "editor.h"
@@ -46,6 +47,7 @@ public slots:
     void trySend();
     void setupCheckIcons();
     void inform();
+    void closeSerialPort();
 private slots:
     void checkState();
     int compile();
@@ -73,7 +75,6 @@ private:
     QAction *(recentFilesAction[MaxRecentFiles]);
     bool isConnected = false;
     void openSerialPort();
-    void closeSerialPort();
     void setupEditor();
     void initFields();
     void setUIStyle();

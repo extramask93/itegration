@@ -31,7 +31,7 @@ signals:
 
 public slots:
     void processCommand(QString command);
-    int processScript(QString fileName);
+    int processScript(Script script);
     void setOmmiting(bool state);
     void toggleChecker();
 };

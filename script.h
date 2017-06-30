@@ -2,8 +2,11 @@
 #define SCRIPT_H
 #include <QObject>
 #include <QFileInfo>
+#include <exception>
 #include <QFile>
+#include <QRegExp>
 #include <QTextStream>
+#include "badnameexception.h"
 
 class Script : public QObject
 {
@@ -11,6 +14,7 @@ class Script : public QObject
     QString path;
     QStringList content;
 public:
+    QString getComplaintName() throw();
     Script(QString path_,QObject *parent=nullptr);
     Script(const Script& sc);
     QString getNameWithExtension();
@@ -19,12 +23,12 @@ public:
     QStringList getContent();
     Script& addCarrets();
     int getNrOfLines();
-    QStringList getContentReadyToSend();
+    QStringList getContentReadyToSend()throw();
     Script& number();
     Script &addLineBreaks();
 signals:
 private:
-    QStringList loadContent();
+    QStringList loadContent() throw();
     Script &addHeading();
 public slots:
 };

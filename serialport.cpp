@@ -8,6 +8,15 @@ SerialPort::SerialPort(QObject* parent):QThread(parent),port{}
     senddialog = new SendDialog(nullptr);
     connect(&port,SIGNAL(readyRead()),this,SLOT(read()));
     connect(senddialog,SIGNAL(cancelButtonClicked()),this,SLOT(cancelSending()));
+    connect(&port,SIGNAL(errorOccurred(QSerialPort::SerialPortError)),this,SLOT(handleError(QSerialPort::SerialPortError)));
+}
+void SerialPort::handleError(QSerialPort::SerialPortError error)
+{
+    if(error==QSerialPort::SerialPortError::NoError)
+        return;
+    isSending=false;
+    QMessageBox::warning(nullptr,"Connection Error","Serial port error. "+port.errorString()+" Code: "+QString::number(error),QMessageBox::Ok);
+    emit portClosed();
 }
 
 SerialPort::~SerialPort()
@@ -43,10 +52,15 @@ void SerialPort::read()
 }
 int SerialPort::writeFile(Script script)
 {
-    if(script.getFileName().isEmpty())
+    QStringList commands;
+    try{
+    commands=script.getContentReadyToSend();
+    }
+    catch(BadNameException ex){
+        QMessageBox::warning(nullptr,"Wrong name",ex.what(),QMessageBox::Ok);
         return 1;
+    }
     isSending=true;
-    QStringList commands=script.getContentReadyToSend();
     int max=commands.size();
     int min=0;
     int current=0;

@@ -5,12 +5,12 @@ Script::Script(QString path_, QObject *parent) :QObject(parent),path(path_)
     content=loadContent();
 }
 
-QStringList Script::loadContent()
+QStringList Script::loadContent() throw()
 {
     QStringList list;
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        throw std::runtime_error("cant open the file");
+        return QStringList();
     QTextStream in(&file);
     while(!in.atEnd())
         list.append(in.readLine());
@@ -57,16 +57,29 @@ int Script::getNrOfLines()
 {
     return content.size();
 }
+QString Script::getComplaintName() throw()
+{
+    QString name = getFileName();
+    if(name.size()>8)
+        return QString("DEF1");
+    name=name.toUpper();
+    QString pattern("^[A-Z0-9]{1,8}$");
+    QRegExp reg(pattern,Qt::CaseSensitive);
+    if(reg.indexIn(name)==-1)
+        return QString("DEF1");
+    else
+        return name;
+}
 
-QStringList Script::getContentReadyToSend()
+QStringList Script::getContentReadyToSend() throw()
 {
     number().addCarrets().addHeading();
     return content;
 }
 Script& Script::addHeading()
 {
-    content.push_front("ER\r");
-    content.push_front("N \""+getFileName()+"\"\r");
+    //content.push_front("ER\r");
+    content.push_front("N \""+getComplaintName()+"\"\r");
     content.push_front("RS\r");
     return *this;
 }

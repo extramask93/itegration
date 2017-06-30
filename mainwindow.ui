@@ -526,6 +526,9 @@
    <property name="text">
     <string>Connect</string>
    </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
   </action>
   <action name="actionRun">
    <property name="icon">
@@ -538,6 +541,9 @@
    <property name="toolTip">
     <string>Sends edited file</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
   </action>
   <action name="actionCheckSyntax">
    <property name="icon">
@@ -546,6 +552,9 @@
    </property>
    <property name="text">
     <string>CheckSyntax</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
    </property>
   </action>
   <action name="actionNew">
@@ -595,6 +604,9 @@
    </property>
    <property name="text">
     <string>Send</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
   <action name="actionStop">
